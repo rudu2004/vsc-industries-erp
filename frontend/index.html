@@ -3,192 +3,256 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VSC Industries — Enterprise B2B Trading & Accounting ERP</title>
+  <title>VSC Industries — Enterprise B2B Trading, Godown & Accounting ERP</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Tailwind Config -->
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
           colors: {
-            brand: {
-              dark: '#0F172A',
-              slate: '#1E293B',
-              card: '#1E293B',
-              cardLight: '#334155',
-              teal: '#0D9488',
-              tealLight: '#14B8A6',
-              accent: '#38BDF8',
-              warning: '#F59E0B',
-              danger: '#EF4444',
-              success: '#10B981',
+            navy: {
+              900: '#0F172A',
+              800: '#1E293B',
+              700: '#334155',
+            },
+            teal: {
+              600: '#0D9488',
+              700: '#0F766E',
+              50: '#F0FDFA',
+              100: '#CCFBF1',
             }
           }
         }
       }
     }
   </script>
+
   <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
     @media print {
       body * { visibility: hidden; }
-      #printArea, #printArea *, #ewayPrintArea, #ewayPrintArea * { visibility: visible; }
-      #printArea, #ewayPrintArea { position: absolute; left: 0; top: 0; width: 100%; color: black !important; background: white !important; }
+      #invoicePrintArea, #invoicePrintArea *, #ewayPrintArea, #ewayPrintArea * { visibility: visible; }
+      #invoicePrintArea, #ewayPrintArea { position: absolute; left: 0; top: 0; width: 100%; color: black !important; background: white !important; }
       .no-print { display: none !important; }
     }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #0F172A; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0D9488; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
   </style>
 </head>
-<body class="bg-[#0B1120] text-slate-100 min-h-screen font-sans antialiased custom-scrollbar">
+<body class="bg-[#F8FAFC] text-slate-800 min-h-screen antialiased flex flex-col custom-scrollbar">
 
-  <!-- TOP HEADER NOTIFICATION / BANNER -->
-  <header class="bg-[#0F172A] border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+  <!-- TOP EXECUTIVE HEADER (Deep Navy) -->
+  <header class="bg-[#0F172A] text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <!-- Logo & Company Branding -->
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-teal-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20">
-            <i class="fa-solid fa-industry text-white text-xl"></i>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        
+        <!-- Company Logo & Details -->
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-teal-500/30 text-white font-black text-xl">
+            <i class="fa-solid fa-industry"></i>
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <span class="text-xl font-black tracking-wide text-white">VSC INDUSTRIES</span>
-              <span class="bg-teal-500/20 text-teal-400 text-xs px-2 py-0.5 rounded font-mono font-semibold border border-teal-500/30">GST: 09AAECV1924K1Z3</span>
+              <span class="text-lg font-black tracking-tight text-white">VSC INDUSTRIES</span>
+              <span class="bg-teal-500/20 text-teal-300 text-[11px] px-2 py-0.5 rounded font-mono font-semibold border border-teal-400/30">
+                GSTIN: 09AAECV1924K1Z3
+              </span>
             </div>
-            <p class="text-xs text-slate-400">Owner: <span class="text-slate-200 font-medium">Vivek Singh Chauhan</span> | Tech Lead: <span class="text-slate-200">Rudraksh Saurabh Asthana</span></p>
+            <p class="text-xs text-slate-400">
+              Enterprise B2B Trading, Godown & Accounting ERP | Owner: <span class="text-slate-200 font-semibold">Vivek Singh Chauhan</span>
+            </p>
           </div>
         </div>
 
-        <!-- Role Selector & Reset Action -->
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="flex items-center bg-slate-800/80 rounded-lg p-1 border border-slate-700">
-            <i class="fa-solid fa-user-shield text-slate-400 text-xs ml-2 mr-1"></i>
-            <select id="roleSelector" onchange="handleRoleChange()" class="bg-transparent text-xs text-slate-200 focus:outline-none pr-3 cursor-pointer py-1 font-medium">
-              <option value="owner" class="bg-slate-900 text-white font-semibold">🔓 Vivek Singh Chauhan (Owner - All Access)</option>
-              <option value="sales" class="bg-slate-900 text-slate-200">💼 Sales & Billing Desk</option>
-              <option value="procurement" class="bg-slate-900 text-slate-200">🛒 Procurement Officer</option>
-              <option value="warehouse" class="bg-slate-900 text-slate-200">🏭 Warehouse Manager</option>
-              <option value="accounts" class="bg-slate-900 text-slate-200">📊 CA / Accounts & GST</option>
+        <!-- Role Switcher & Demo Reset -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="flex items-center bg-slate-800 rounded-lg p-1 border border-slate-700 shadow-inner">
+            <span class="text-xs text-slate-400 pl-2 pr-1 font-medium">Logged in as:</span>
+            <select id="roleSelector" onchange="handleRoleChange()" class="bg-slate-900 text-xs text-teal-300 font-bold rounded px-2.5 py-1.5 focus:outline-none cursor-pointer border border-slate-700">
+              <option value="owner">👑 Vivek Singh Chauhan (Owner — Full Access)</option>
+              <option value="sales">💼 Sales Executive (Order Desk)</option>
+              <option value="procurement">🛒 Purchase Officer (Buying Desk)</option>
+              <option value="warehouse">🏭 Warehouse / Godown Manager</option>
+              <option value="accounts">📊 Chartered Accountant (CA — Accounts & GST)</option>
             </select>
           </div>
 
-          <button onclick="resetDemoData()" class="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition">
-            <i class="fa-solid fa-rotate text-teal-400"></i>
+          <button onclick="resetDemoData()" title="Reset database to clean initial state" class="bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-rotate-left text-teal-400"></i>
             <span>Reset Demo</span>
           </button>
         </div>
+
       </div>
 
-      <!-- LIVE KPI BADGES BAR -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-3 pt-3 border-t border-slate-800/70 text-xs">
-        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between">
-          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-rose-500"></i> Credit Holds</span>
-          <span id="kpiCreditHolds" class="font-bold font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">0</span>
+      <!-- LIVE TOP KPI CARDS BAR (Light on Dark contrast) -->
+      <div id="headerKpiBar" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-3 pt-3 border-t border-slate-800 text-xs">
+        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700 flex items-center justify-between">
+          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-ban text-rose-400"></i> Credit Holds</span>
+          <span id="kpiCreditHolds" class="font-bold font-mono text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded border border-rose-500/30">0</span>
         </div>
-        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between">
-          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Low Stock Alerts</span>
-          <span id="kpiLowStock" class="font-bold font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">0</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700 flex items-center justify-between">
+          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Low Godown Stock</span>
+          <span id="kpiLowStock" class="font-bold font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">0</span>
         </div>
-        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between">
-          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-truck-ramp-box text-cyan-400"></i> Open PO / GRN</span>
-          <span id="kpiOpenPOs" class="font-bold font-mono text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">0</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700 flex items-center justify-between">
+          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-truck-ramp-box text-cyan-400"></i> Open Truck Inwards</span>
+          <span id="kpiOpenPOs" class="font-bold font-mono text-cyan-300 bg-cyan-500/20 px-2 py-0.5 rounded border border-cyan-500/30">0</span>
         </div>
-        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between">
-          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-scale-balanced text-emerald-400"></i> Trial Balance</span>
-          <span id="kpiLedgerStatus" class="font-bold font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Balanced (Dr=Cr)</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700 flex items-center justify-between">
+          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-scale-balanced text-emerald-400"></i> Ledger Balance</span>
+          <span id="kpiLedgerStatus" class="font-bold font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30">Balanced (Dr=Cr)</span>
         </div>
-        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between col-span-2 sm:col-span-1">
-          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-indian-rupee-sign text-teal-400"></i> Revenue</span>
-          <span id="kpiRevenue" class="font-bold font-mono text-teal-300 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">₹0</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700 flex items-center justify-between col-span-2 sm:col-span-1">
+          <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-indian-rupee-sign text-teal-400"></i> B2B Revenue</span>
+          <span id="kpiRevenue" class="font-bold font-mono text-teal-300 bg-teal-500/20 px-2 py-0.5 rounded border border-teal-500/30">₹0</span>
         </div>
       </div>
     </div>
   </header>
 
+  <!-- DYNAMIC ACTIVE PROFILE BANNER (Visual role clarity) -->
+  <div id="roleBanner" class="bg-gradient-to-r from-teal-50 to-emerald-50 border-b border-teal-200 px-4 sm:px-8 py-2.5 transition-all">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs gap-2">
+      <div class="flex items-center space-x-2">
+        <span id="roleBadge" class="bg-teal-700 text-white font-bold px-2 py-0.5 rounded text-[11px] tracking-wide uppercase">
+          OWNER PROFILE
+        </span>
+        <span id="roleDescription" class="text-slate-700 font-medium">
+          Logged in as <b>Vivek Singh Chauhan</b>. You have full access to override credit limits, view company revenue & margins, and manage all 5 modules.
+        </span>
+      </div>
+      <div id="roleSecurityNotice" class="text-slate-500 font-mono text-[11px]">
+        Security: All 5 Modules Enabled
+      </div>
+    </div>
+  </div>
+
   <!-- NAVIGATION TABS -->
-  <nav class="bg-[#0F172A]/90 border-b border-slate-800 sticky top-[108px] z-30 backdrop-blur">
+  <nav class="bg-white border-b border-slate-200 sticky top-[108px] z-30 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex space-x-1 sm:space-x-3 overflow-x-auto py-2 custom-scrollbar" id="navTabs">
-        <button onclick="switchTab('sales')" id="tabBtn-sales" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition bg-teal-600 text-white shadow-lg shadow-teal-600/30">
-          <i class="fa-solid fa-file-invoice-dollar"></i>
-          <span>1. Sales & Credit Control</span>
+      <div class="flex space-x-2 overflow-x-auto py-2.5 custom-scrollbar" id="navTabsContainer">
+        <!-- Tab Buttons with Plain Business Names -->
+        <button onclick="switchTab('sales')" id="tabBtn-sales" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition bg-teal-600 text-white shadow-sm">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>1. Sales Orders & Credit Check</span>
         </button>
-        <button onclick="switchTab('procurement')" id="tabBtn-procurement" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-handshake-angle"></i>
-          <span>2. Procurement, RFQ & GRN</span>
+        <button onclick="switchTab('procurement')" id="tabBtn-procurement" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span>2. Supplier Quotes & Truck Receiving (PO/GRN)</span>
         </button>
-        <button onclick="switchTab('inventory')" id="tabBtn-inventory" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="switchTab('inventory')" id="tabBtn-inventory" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
           <i class="fa-solid fa-warehouse"></i>
-          <span>3. Multi-Warehouse & Batches</span>
+          <span>3. Godown Stock & Batch Transfers</span>
         </button>
-        <button onclick="switchTab('accounting')" id="tabBtn-accounting" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-book-journal-whills"></i>
-          <span>4. Auto-Accounting & Trial Balance</span>
+        <button onclick="switchTab('accounting')" id="tabBtn-accounting" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i class="fa-solid fa-book"></i>
+          <span>4. Auto-Profit & Party Ledger</span>
         </button>
-        <button onclick="switchTab('gst')" id="tabBtn-gst" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-stamp"></i>
-          <span>5. GST E-Invoice & E-Way Bill</span>
+        <button onclick="switchTab('gst')" id="tabBtn-gst" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>5. GST E-Invoice & E-Way Bills</span>
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- MAIN VIEWPORT CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
 
-    <!-- TAB 1: SALES & CREDIT CONTROL (Order-to-Cash) -->
-    <div id="tabContent-sales" class="tab-pane block space-y-6">
+    <!-- =================================================================== -->
+    <!-- TAB 1: SALES ORDERS & CREDIT CHECK (Order-to-Cash)                  -->
+    <!-- =================================================================== -->
+    <div id="tabContent-sales" class="tab-pane block space-y-5">
+      
+      <!-- DEMO GUIDE CALLOUT -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start space-x-3 text-xs text-amber-900 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 font-bold">💡</div>
+        <div class="flex-1">
+          <b class="text-sm text-amber-950 block mb-0.5">What to say to client (Demo Guide):</b>
+          <p>"VSC Industries prevents bad debts by automatically locking sales if a customer's unpaid balance exceeds their credit limit. Watch how the system blocks an invoice when a buyer exceeds their limit, and only permits Vivek Singh Chauhan (Owner) to approve it."</p>
+          <div class="mt-2 flex items-center gap-2">
+            <span class="font-bold text-amber-950">👉 Quick Demo:</span>
+            <button onclick="quickFillCreditBreachOrder()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 py-1 rounded shadow-sm transition inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt"></i> ⚡ Demo: Book ₹95,000 Order (Triggers Credit Block)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL 3-STEP PIPELINE BAR -->
+      <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+        <span class="text-slate-400 uppercase tracking-wider text-[11px]">B2B Order Lifecycle:</span>
+        <div class="flex items-center space-x-2">
+          <span class="bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200">Step 1: Create Quote</span>
+          <i class="fa-solid fa-arrow-right text-slate-300"></i>
+          <span class="bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">Step 2: Auto Credit Limit Check</span>
+          <i class="fa-solid fa-arrow-right text-slate-300"></i>
+          <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">Step 3: 1-Click Tax Invoice & Dispatch</span>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- Left: Sales Order / Quotation Form -->
-        <div class="lg:col-span-5 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-cart-plus text-teal-400"></i> New Quotation / Order Builder
+        <!-- Left: Sales Order Form -->
+        <div class="lg:col-span-5 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-file-circle-plus text-teal-600"></i> Book Sales Order / Quotation
             </h3>
-            <span class="text-xs text-slate-400 font-mono">B2B Tiered Engine</span>
+            <span class="text-[11px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Tiered B2B Engine</span>
           </div>
 
-          <!-- Customer Selection -->
-          <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-slate-300">Select Customer (B2B Buyer)</label>
-            <select id="salesCustomerSelect" onchange="updateCustomerExposurePreview()" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none">
+          <!-- Customer Select -->
+          <div class="space-y-1">
+            <label class="text-xs font-semibold text-slate-700">Select Customer (Party)</label>
+            <select id="salesCustomerSelect" onchange="updateCustomerExposurePreview()" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none">
               <!-- Dynamically populated -->
             </select>
           </div>
 
-          <!-- Live Credit Limit Exposure Bar -->
-          <div id="customerExposureCard" class="bg-slate-800/60 p-3 rounded-lg border border-slate-700/60 space-y-2">
+          <!-- Customer Credit Meter Bar -->
+          <div id="customerExposureCard" class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-2">
             <div class="flex justify-between items-center text-xs">
-              <span class="text-slate-400 font-medium">Credit Limit: <span id="prevLimit" class="font-mono text-white font-bold">₹0</span></span>
-              <span class="text-slate-400 font-medium">Outstanding: <span id="prevOutstanding" class="font-mono text-amber-400 font-bold">₹0</span></span>
+              <span class="text-slate-600">Credit Limit: <b id="prevLimit" class="font-mono text-slate-900">₹0</b></span>
+              <span class="text-slate-600">Current Unpaid: <b id="prevOutstanding" class="font-mono text-amber-600">₹0</b></span>
             </div>
-            <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-              <div id="exposureBar" class="h-2 rounded-full bg-teal-500 transition-all duration-300" style="width: 0%"></div>
+            <!-- Meter -->
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div id="exposureBar" class="h-2.5 rounded-full bg-teal-600 transition-all duration-300" style="width: 0%"></div>
             </div>
-            <div class="flex justify-between items-center text-[11px] text-slate-400">
-              <span>Price Tier: <span id="prevTier" class="text-teal-300 font-bold">Wholesale</span></span>
-              <span>Available Credit: <span id="prevAvailable" class="font-mono text-emerald-400 font-bold">₹0</span></span>
+            <div class="flex justify-between items-center text-[11px] text-slate-500">
+              <span>Price Tier: <b id="prevTier" class="text-teal-700">Wholesale</b></span>
+              <span id="creditMeterText" class="font-mono font-bold text-slate-700">Available: ₹0</span>
             </div>
           </div>
 
-          <!-- Product & Warehouse Selection -->
+          <!-- Product & Godown Selection -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-slate-300">Product</label>
-              <select id="salesProductSelect" onchange="updateSalesPriceCalculation()" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-700">Product Item</label>
+              <select id="salesProductSelect" onchange="updateSalesPriceCalculation()" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none">
                 <!-- Dynamically populated -->
               </select>
             </div>
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-slate-300">Dispatch Warehouse</label>
-              <select id="salesWarehouseSelect" onchange="updateSalesPriceCalculation()" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-700">Dispatch Godown</label>
+              <select id="salesWarehouseSelect" onchange="updateSalesPriceCalculation()" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none">
                 <option value="Central Hub - Lucknow">Central Hub - Lucknow</option>
                 <option value="North Depot - Delhi">North Depot - Delhi</option>
                 <option value="West Branch - Mumbai">West Branch - Mumbai</option>
@@ -198,74 +262,78 @@
 
           <!-- Quantity and Pricing Breakdown -->
           <div class="grid grid-cols-2 gap-3">
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-slate-300">Order Quantity</label>
-              <input type="number" id="salesQtyInput" min="1" value="100" oninput="updateSalesPriceCalculation()" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none font-mono">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-700">Quantity (Units)</label>
+              <input type="number" id="salesQtyInput" min="1" value="100" oninput="updateSalesPriceCalculation()" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none font-mono font-bold">
             </div>
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-slate-300">Unit Rate (Tiered)</label>
-              <input type="text" id="salesUnitRate" readonly class="w-full bg-slate-800/50 text-teal-400 text-xs rounded-lg p-2.5 border border-slate-700 font-mono font-bold">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-700">Tiered Rate / Unit</label>
+              <input type="text" id="salesUnitRate" readonly class="w-full bg-slate-100 text-teal-700 text-xs rounded-lg p-2.5 border border-slate-200 font-mono font-bold cursor-not-allowed">
             </div>
           </div>
 
-          <!-- Pricing & GST Summary Box -->
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1.5 text-xs font-mono">
-            <div class="flex justify-between text-slate-400">
-              <span>Taxable Value:</span>
-              <span id="calcBaseAmount" class="text-white">₹0</span>
+          <!-- Order Cost & Tax Box -->
+          <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-1.5 text-xs font-mono">
+            <div class="flex justify-between text-slate-600">
+              <span>Item Taxable Total:</span>
+              <span id="calcBaseAmount" class="font-bold text-slate-900">₹0</span>
             </div>
-            <div class="flex justify-between text-slate-400">
-              <span id="calcTaxLabel">GST (18%):</span>
-              <span id="calcGstAmount" class="text-white">₹0</span>
+            <div class="flex justify-between text-slate-600">
+              <span id="calcTaxLabel">GST Tax (18%):</span>
+              <span id="calcGstAmount" class="font-bold text-slate-900">₹0</span>
             </div>
-            <div class="flex justify-between font-bold text-sm pt-2 border-t border-slate-800">
-              <span class="text-teal-400">Total B2B Amount:</span>
-              <span id="calcTotalAmount" class="text-teal-300">₹0</span>
+            <div class="flex justify-between font-bold text-sm pt-2 border-t border-slate-200">
+              <span class="text-teal-800">Total Bill Value:</span>
+              <span id="calcTotalAmount" class="text-teal-700 font-black">₹0</span>
             </div>
-            <div id="creditBreachWarning" class="hidden mt-2 p-2 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[11px] font-sans">
-              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Order breaches Credit Limit! Will trigger <b>CREDIT HOLD</b>.
+            <!-- Alert Badge if breaches limit -->
+            <div id="creditBreachWarning" class="hidden mt-2 p-2.5 rounded bg-rose-50 border border-rose-200 text-rose-700 text-xs font-sans flex items-start gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-rose-600 mt-0.5"></i>
+              <div>
+                <b>Credit Limit Exceeded!</b> This order will trigger an automatic <b>CREDIT HOLD</b>. Only Vivek Singh Chauhan (Owner) can authorize invoice release.
+              </div>
             </div>
           </div>
 
           <!-- Action Buttons -->
-          <div class="grid grid-cols-2 gap-3 pt-2">
-            <button onclick="submitSalesOrder(true)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 px-3 rounded-lg text-xs font-bold border border-slate-700 transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-file-lines text-slate-400"></i> Save as Quote
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <button onclick="submitSalesOrder(true)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 px-3 rounded-lg text-xs font-bold border border-slate-300 transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-file-pen text-slate-500"></i> Save Quotation
             </button>
-            <button onclick="submitSalesOrder(false)" class="bg-teal-600 hover:bg-teal-500 text-white py-2.5 px-3 rounded-lg text-xs font-bold shadow-lg shadow-teal-600/30 transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-check-to-slot"></i> Confirm Order
+            <button onclick="submitSalesOrder(false)" class="bg-teal-600 hover:bg-teal-700 text-white py-2.5 px-3 rounded-lg text-xs font-bold shadow-md shadow-teal-600/20 transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-check-circle"></i> Confirm Order
             </button>
           </div>
         </div>
 
-        <!-- Right: Order-to-Cash Pipeline Table -->
-        <div class="lg:col-span-7 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <!-- Right: Pipeline Table -->
+        <div class="lg:col-span-7 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <i class="fa-solid fa-stream text-cyan-400"></i> Order-to-Cash Execution Pipeline
+              <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-teal-600"></i> Live Order-to-Cash Pipeline
               </h3>
-              <p class="text-xs text-slate-400">Quote &rarr; Confirmed Order &rarr; Tax Invoice &rarr; Dispatch Tracking</p>
+              <p class="text-xs text-slate-500">Real-time status from Quote &rarr; Credit Check &rarr; Tax Invoice &rarr; Delivery</p>
             </div>
-            <button onclick="loadBootstrap()" class="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1">
-              <i class="fa-solid fa-arrows-rotate"></i> Refresh
+            <button onclick="loadBootstrap()" class="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-rotate text-teal-600"></i> Refresh
             </button>
           </div>
 
           <!-- Orders Table -->
           <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="p-2.5">Doc No</th>
+                  <th class="p-2.5">Order Ref</th>
                   <th class="p-2.5">Customer</th>
-                  <th class="p-2.5">Item & Total</th>
+                  <th class="p-2.5">Goods & Total</th>
                   <th class="p-2.5">Credit Gate</th>
-                  <th class="p-2.5">Stage & Action</th>
-                  <th class="p-2.5">Dispatch</th>
+                  <th class="p-2.5">Next Action</th>
+                  <th class="p-2.5">Delivery Status</th>
                 </tr>
               </thead>
-              <tbody id="salesOrdersTableBody" class="divide-y divide-slate-800">
+              <tbody id="salesOrdersTableBody" class="divide-y divide-slate-100">
                 <!-- Dynamically populated -->
               </tbody>
             </table>
@@ -275,19 +343,42 @@
       </div>
     </div>
 
-    <!-- TAB 2: PROCUREMENT, RFQ & GRN -->
-    <div id="tabContent-procurement" class="tab-pane hidden space-y-6">
-      
-      <!-- Top Section: RFQ Comparison Matrix -->
-      <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+    <!-- =================================================================== -->
+    <!-- TAB 2: SUPPLIER QUOTES & TRUCK RECEIVING (PO/GRN)                   -->
+    <!-- =================================================================== -->
+    <div id="tabContent-procurement" class="tab-pane hidden space-y-5">
+
+      <!-- DEMO GUIDE CALLOUT -->
+      <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-4 flex items-start space-x-3 text-xs text-cyan-950 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-cyan-600 text-white flex items-center justify-center shrink-0 font-bold">💡</div>
+        <div class="flex-1">
+          <b class="text-sm text-cyan-950 block mb-0.5">What to say to client (Demo Guide):</b>
+          <p>"Procurement officers compare 3 competing supplier quotes on price, delivery time, and payment terms in 1 click. When the truck arrives at the godown, staff enters actual physical count; any shortage (e.g. 950 delivered vs 1000 ordered) automatically discounts the supplier liability ledger so VSC never pays for missing goods."</p>
+        </div>
+      </div>
+
+      <!-- VISUAL 3-STEP PIPELINE BAR -->
+      <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+        <span class="text-slate-400 uppercase tracking-wider text-[11px]">Procurement Flow:</span>
+        <div class="flex items-center space-x-2">
+          <span class="bg-cyan-50 text-cyan-700 px-3 py-1 rounded-full border border-cyan-200">Step 1: Compare 3 Suppliers</span>
+          <i class="fa-solid fa-arrow-right text-slate-300"></i>
+          <span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200">Step 2: Issue Purchase Order (PO)</span>
+          <i class="fa-solid fa-arrow-right text-slate-300"></i>
+          <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">Step 3: Verify Truck Delivery at Godown & Deduct Shortages</span>
+        </div>
+      </div>
+
+      <!-- Section 1: RFQ Comparison Matrix -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-scale-balanced text-teal-400"></i> Side-by-Side Supplier RFQ Comparison Matrix
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-scale-balanced text-teal-600"></i> Supplier Quotation Comparison Matrix
             </h3>
-            <p class="text-xs text-slate-400">Item: <span class="text-slate-200 font-semibold">Heavy Duty Brass Valves (2 Inch)</span> | Required Qty: <span class="font-mono text-teal-400 font-semibold">200 Units</span></p>
+            <p class="text-xs text-slate-500">Item: <b class="text-slate-800">Heavy Duty Brass Valves (2 Inch)</b> | Lot Required: <span class="font-mono font-bold text-teal-700">200 Units</span></p>
           </div>
-          <span class="text-xs font-mono bg-slate-800 text-slate-300 px-2.5 py-1 rounded border border-slate-700">RFQ-26-01</span>
+          <span class="text-xs font-mono bg-slate-100 text-slate-700 px-2.5 py-1 rounded border border-slate-200 font-semibold">RFQ-26-01</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="rfqCardsContainer">
@@ -295,32 +386,31 @@
         </div>
       </div>
 
-      <!-- Bottom Section: Purchase Orders & GRN Matcher -->
-      <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+      <!-- Section 2: Purchase Orders & Truck Delivery Check -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-boxes-packing text-cyan-400"></i> Purchase Orders & Goods Receipt Note (GRN) Verification
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-truck-ramp-box text-cyan-600"></i> Truck Delivery Check & Goods Receipt (GRN) Matcher
             </h3>
-            <p class="text-xs text-slate-400">Verify delivered stock against PO quantities, catch supplier shortages, and auto-credit Inventory Asset</p>
+            <p class="text-xs text-slate-500">Physical receipt verification at godown. Shortages automatically trigger supplier billing deductions.</p>
           </div>
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
           <table class="w-full text-left text-xs">
-            <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700">
+            <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
               <tr>
                 <th class="p-2.5">PO Number</th>
                 <th class="p-2.5">Supplier Name</th>
                 <th class="p-2.5">Product & Destination</th>
-                <th class="p-2.5">Ordered Qty</th>
-                <th class="p-2.5">Received Qty</th>
-                <th class="p-2.5">Shortage Flag</th>
-                <th class="p-2.5">Status</th>
-                <th class="p-2.5 text-right">Inward Action</th>
+                <th class="p-2.5 text-center">Ordered</th>
+                <th class="p-2.5 text-center">Delivered</th>
+                <th class="p-2.5 text-center">Shortage Status</th>
+                <th class="p-2.5 text-right">Verification Action</th>
               </tr>
             </thead>
-            <tbody id="purchaseOrdersTableBody" class="divide-y divide-slate-800">
+            <tbody id="purchaseOrdersTableBody" class="divide-y divide-slate-100">
               <!-- Dynamically populated -->
             </tbody>
           </table>
@@ -329,49 +419,64 @@
 
     </div>
 
-    <!-- TAB 3: MULTI-WAREHOUSE & BATCH INVENTORY -->
-    <div id="tabContent-inventory" class="tab-pane hidden space-y-6">
+    <!-- =================================================================== -->
+    <!-- TAB 3: GODOWN STOCK & BATCH TRANSFERS                               -->
+    <!-- =================================================================== -->
+    <div id="tabContent-inventory" class="tab-pane hidden space-y-5">
 
-      <!-- Warehouse Filter Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+      <!-- DEMO GUIDE CALLOUT -->
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start space-x-3 text-xs text-emerald-950 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 font-bold">💡</div>
+        <div class="flex-1">
+          <b class="text-sm text-emerald-950 block mb-0.5">What to say to client (Demo Guide):</b>
+          <p>"Monitor inventory across Lucknow, Delhi, and Mumbai godowns with First-Expiry-First-Out (FEFO) alerts to prevent dead stock. When one branch runs low, warehouse managers execute inter-godown transfers with complete audit trails."</p>
+        </div>
+      </div>
+
+      <!-- GODOWN SUMMARY CARDS (Top Overview) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="godownSummaryCards">
+        <!-- Dynamically rendered 3 Godown Cards -->
+      </div>
+
+      <!-- Warehouse Filter & Alert Badges -->
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-filter text-teal-400 text-xs"></i>
-          <span class="text-xs font-semibold text-slate-300">Filter Location:</span>
+          <span class="font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-filter text-teal-600"></i> Filter Godown:</span>
           <div class="flex space-x-1.5" id="warehouseFilterBtns">
-            <button onclick="filterInventory('All')" class="px-3 py-1 rounded text-xs font-semibold bg-teal-600 text-white">All Warehouses</button>
-            <button onclick="filterInventory('Central Hub - Lucknow')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">Central Hub - Lucknow</button>
-            <button onclick="filterInventory('North Depot - Delhi')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">North Depot - Delhi</button>
-            <button onclick="filterInventory('West Branch - Mumbai')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">West Branch - Mumbai</button>
+            <button onclick="filterInventory('All')" class="px-3 py-1 rounded text-xs font-semibold bg-teal-600 text-white shadow-sm">All Godowns</button>
+            <button onclick="filterInventory('Central Hub - Lucknow')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Central Hub - Lucknow</button>
+            <button onclick="filterInventory('North Depot - Delhi')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">North Depot - Delhi</button>
+            <button onclick="filterInventory('West Branch - Mumbai')" class="px-3 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">West Branch - Mumbai</button>
           </div>
         </div>
-        <div class="text-xs text-slate-400">
-          <span class="mr-3"><span class="w-2.5 h-2.5 inline-block rounded-full bg-amber-400 mr-1"></span> Low Stock</span>
-          <span><span class="w-2.5 h-2.5 inline-block rounded-full bg-rose-500 mr-1"></span> Expiring Soon</span>
+        <div class="flex items-center space-x-3 text-xs">
+          <span class="inline-flex items-center gap-1.5 font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i class="fa-solid fa-circle-exclamation"></i> Low Stock (Reorder)</span>
+          <span class="inline-flex items-center gap-1.5 font-medium text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200"><i class="fa-solid fa-clock"></i> Expiring Soon (Sell First - FEFO)</span>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- Left: Stock Transfer Card -->
-        <div class="lg:col-span-4 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="pb-3 border-b border-slate-800">
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-dolly text-teal-400"></i> Inter-Warehouse Transfer
+        <!-- Left: Inter-Godown Stock Transfer Form -->
+        <div class="lg:col-span-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-truck-moving text-teal-600"></i> Inter-Godown Stock Transfer
             </h3>
-            <p class="text-xs text-slate-400">Rebalance inventory across hub & depots</p>
+            <p class="text-xs text-slate-500">Move inventory between godowns with instant stock sync</p>
           </div>
 
           <div class="space-y-3">
             <div class="space-y-1">
-              <label class="text-xs font-semibold text-slate-300">Source Batch</label>
-              <select id="trfBatchSelect" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none font-mono">
+              <label class="text-xs font-semibold text-slate-700">Source Godown Batch</label>
+              <select id="trfBatchSelect" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none font-mono">
                 <!-- Dynamically populated -->
               </select>
             </div>
 
             <div class="space-y-1">
-              <label class="text-xs font-semibold text-slate-300">Destination Warehouse</label>
-              <select id="trfTargetWarehouse" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none">
+              <label class="text-xs font-semibold text-slate-700">Destination Godown</label>
+              <select id="trfTargetWarehouse" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none">
                 <option value="Central Hub - Lucknow">Central Hub - Lucknow</option>
                 <option value="North Depot - Delhi">North Depot - Delhi</option>
                 <option value="West Branch - Mumbai">West Branch - Mumbai</option>
@@ -379,47 +484,47 @@
             </div>
 
             <div class="space-y-1">
-              <label class="text-xs font-semibold text-slate-300">Transfer Qty</label>
-              <input type="number" id="trfQtyInput" min="1" value="50" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg p-2.5 border border-slate-700 focus:border-teal-500 focus:outline-none font-mono">
+              <label class="text-xs font-semibold text-slate-700">Transfer Quantity</label>
+              <input type="number" id="trfQtyInput" min="1" value="50" class="w-full bg-slate-50 text-slate-900 text-xs rounded-lg p-2.5 border border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none font-mono font-bold">
             </div>
 
-            <button onclick="submitStockTransfer()" class="w-full bg-teal-600 hover:bg-teal-500 text-white py-2.5 rounded-lg text-xs font-bold transition shadow-lg shadow-teal-600/30 flex items-center justify-center gap-1.5">
+            <button onclick="submitStockTransfer()" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-lg text-xs font-bold transition shadow-md shadow-teal-600/20 flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-arrow-right-arrow-left"></i> Execute Transfer
             </button>
           </div>
 
-          <!-- Transfer History Snippet -->
-          <div class="pt-4 border-t border-slate-800">
-            <h4 class="text-xs font-bold text-slate-400 mb-2">Recent Transfers</h4>
-            <div id="transferHistoryList" class="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar text-[11px]">
+          <!-- Transfer History -->
+          <div class="pt-4 border-t border-slate-100">
+            <h4 class="text-xs font-bold text-slate-700 mb-2">Recent Transfers Log</h4>
+            <div id="transferHistoryList" class="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar text-xs">
               <!-- Dynamically populated -->
             </div>
           </div>
         </div>
 
-        <!-- Right: Live Inventory Ledger Table -->
-        <div class="lg:col-span-8 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-boxes-stacked text-cyan-400"></i> Stock Ledger with Tiered Pricing & Expiry
+        <!-- Right: Live Stock Table -->
+        <div class="lg:col-span-8 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-boxes-stacked text-teal-600"></i> Godown Inventory & Expiry Ledger
             </h3>
-            <span class="text-xs text-slate-400 font-mono" id="inventoryCountBadge">0 Batches</span>
+            <span class="text-xs font-mono font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded" id="inventoryCountBadge">0 Batches</span>
           </div>
 
           <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="p-2.5">Product & SKU</th>
-                  <th class="p-2.5">Warehouse</th>
+                  <th class="p-2.5">Item & SKU</th>
+                  <th class="p-2.5">Godown</th>
                   <th class="p-2.5">Batch / Expiry</th>
-                  <th class="p-2.5">Available Qty</th>
-                  <th class="p-2.5">Cost</th>
-                  <th class="p-2.5">Wholesale / Dealer / Retail</th>
-                  <th class="p-2.5">Health</th>
+                  <th class="p-2.5 text-center">Available Stock</th>
+                  <th class="p-2.5 text-right">Cost Rate</th>
+                  <th class="p-2.5 text-right">Wholesale Rate</th>
+                  <th class="p-2.5 text-center">Stock Health</th>
                 </tr>
               </thead>
-              <tbody id="inventoryTableBody" class="divide-y divide-slate-800">
+              <tbody id="inventoryTableBody" class="divide-y divide-slate-100">
                 <!-- Dynamically populated -->
               </tbody>
             </table>
@@ -429,98 +534,109 @@
       </div>
     </div>
 
-    <!-- TAB 4: AUTO ACCOUNTING & TRIAL BALANCE -->
-    <div id="tabContent-accounting" class="tab-pane hidden space-y-6">
+    <!-- =================================================================== -->
+    <!-- TAB 4: AUTO-PROFIT & PARTY LEDGER                                   -->
+    <!-- =================================================================== -->
+    <div id="tabContent-accounting" class="tab-pane hidden space-y-5">
 
-      <!-- P&L and Balance Sheet Key Metrics -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-          <span class="text-xs text-slate-400 block mb-1">Sales Revenue</span>
-          <span id="accRevenue" class="text-lg font-black font-mono text-teal-400">₹0</span>
+      <!-- DEMO GUIDE CALLOUT -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex items-start space-x-3 text-xs text-indigo-950 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 font-bold">💡</div>
+        <div class="flex-1">
+          <b class="text-sm text-indigo-950 block mb-0.5">What to say to client (Demo Guide):</b>
+          <p>"Every sales invoice and godown delivery automatically updates the General Ledger with 100% mathematical balance (Debits = Credits) without any manual bookkeeping. The system computes live profit margins and exports directly to Tally XML."</p>
         </div>
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-          <span class="text-xs text-slate-400 block mb-1">Inventory Asset</span>
-          <span id="accInventory" class="text-lg font-black font-mono text-cyan-400">₹0</span>
+      </div>
+
+      <!-- 4 BIG NUMBER CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-medium flex items-center gap-1.5 mb-1"><i class="fa-solid fa-sack-dollar text-teal-600"></i> Total Sales Revenue</div>
+          <div id="accRevenue" class="text-2xl font-black font-mono text-teal-700">₹0</div>
+          <div id="accMarginTag" class="text-[11px] text-slate-500 mt-1">Live B2B Gross Margin: <b>0%</b></div>
         </div>
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-          <span class="text-xs text-slate-400 block mb-1">Trade Receivables (Debtors)</span>
-          <span id="accReceivables" class="text-lg font-black font-mono text-emerald-400">₹0</span>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-medium flex items-center gap-1.5 mb-1"><i class="fa-solid fa-boxes-packing text-cyan-600"></i> Current Stock Value</div>
+          <div id="accInventory" class="text-2xl font-black font-mono text-slate-900">₹0</div>
+          <div class="text-[11px] text-slate-500 mt-1">Asset valuation across all godowns</div>
         </div>
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-          <span class="text-xs text-slate-400 block mb-1">Trade Payables (Creditors)</span>
-          <span id="accPayables" class="text-lg font-black font-mono text-rose-400">₹0</span>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-medium flex items-center gap-1.5 mb-1"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Money to Collect (Receivables)</div>
+          <div id="accReceivables" class="text-2xl font-black font-mono text-emerald-700">₹0</div>
+          <div class="text-[11px] text-slate-500 mt-1">Total outstanding from customers</div>
         </div>
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 col-span-2 sm:col-span-1">
-          <span class="text-xs text-slate-400 block mb-1">Gross Profit / Margin</span>
-          <span id="accGrossProfit" class="text-lg font-black font-mono text-amber-300">₹0</span>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-medium flex items-center gap-1.5 mb-1"><i class="fa-solid fa-file-invoice-dollar text-rose-600"></i> Money to Pay (Payables)</div>
+          <div id="accPayables" class="text-2xl font-black font-mono text-rose-700">₹0</div>
+          <div class="text-[11px] text-slate-500 mt-1">Trade dues to approved suppliers</div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- Left: Live Trial Balance -->
-        <div class="lg:col-span-6 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <!-- Left: Auto-Matched Trial Balance -->
+        <div class="lg:col-span-6 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <i class="fa-solid fa-scale-balanced text-teal-400"></i> Double-Entry Trial Balance Sheet
+              <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-scale-balanced text-teal-600"></i> Auto-Matched Trial Balance Sheet
               </h3>
-              <p class="text-xs text-slate-400">Strict equality verification: Total Debits == Total Credits</p>
+              <p class="text-xs text-slate-500">Mathematical proof of balanced double-entry accounting</p>
             </div>
-            <span id="trialBalanceBadge" class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              Balanced
+            <span id="trialBalanceBadge" class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Balanced (Dr == Cr)
             </span>
           </div>
 
           <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
                   <th class="p-2.5">Account Head</th>
-                  <th class="p-2.5">Type</th>
+                  <th class="p-2.5">Category</th>
                   <th class="p-2.5 text-right">Debit (₹)</th>
                   <th class="p-2.5 text-right">Credit (₹)</th>
                 </tr>
               </thead>
-              <tbody id="trialBalanceTableBody" class="divide-y divide-slate-800 font-mono">
+              <tbody id="trialBalanceTableBody" class="divide-y divide-slate-100 font-mono">
                 <!-- Dynamically populated -->
               </tbody>
-              <tfoot class="border-t-2 border-slate-700 bg-slate-950 font-bold font-mono text-sm">
+              <tfoot class="border-t-2 border-slate-300 bg-slate-50 font-bold font-mono text-sm">
                 <tr>
-                  <td colspan="2" class="p-3 text-slate-200 uppercase tracking-wider">Total Balance</td>
-                  <td id="tbTotalDebit" class="p-3 text-right text-emerald-400">₹0</td>
-                  <td id="tbTotalCredit" class="p-3 text-right text-emerald-400">₹0</td>
+                  <td colspan="2" class="p-3 text-slate-900 uppercase">Trial Balance Total:</td>
+                  <td id="tbTotalDebit" class="p-3 text-right text-emerald-700 font-black">₹0</td>
+                  <td id="tbTotalCredit" class="p-3 text-right text-emerald-700 font-black">₹0</td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </div>
 
-        <!-- Right: General Ledger Voucher Stream -->
-        <div class="lg:col-span-6 bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <!-- Right: General Ledger Entries Stream -->
+        <div class="lg:col-span-6 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-cyan-400"></i> Automated General Ledger Stream
+              <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-receipt text-cyan-600"></i> Live General Ledger Journal Stream
               </h3>
-              <p class="text-xs text-slate-400">Auto-posted from Invoiced Sales & GRN Goods Receipts</p>
+              <p class="text-xs text-slate-500">Auto-posted upon invoice creation and delivery verification</p>
             </div>
-            <a href="/api/accounting/export-tally" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5 font-semibold">
-              <i class="fa-solid fa-file-code text-teal-400"></i> Export Tally XML
+            <a href="/api/accounting/export-tally" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1.5 font-bold shadow-sm">
+              <i class="fa-solid fa-file-code text-teal-600"></i> Download for Tally (XML)
             </a>
           </div>
 
-          <div class="overflow-x-auto max-h-[500px] overflow-y-auto custom-scrollbar">
+          <div class="overflow-x-auto max-h-[480px] overflow-y-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700 sticky top-0">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 sticky top-0">
                 <tr>
                   <th class="p-2.5">Voucher / Date</th>
-                  <th class="p-2.5">Account Head & Narration</th>
+                  <th class="p-2.5">Account Head & Particulars</th>
                   <th class="p-2.5 text-right">Debit (₹)</th>
                   <th class="p-2.5 text-right">Credit (₹)</th>
                 </tr>
               </thead>
-              <tbody id="generalLedgerTableBody" class="divide-y divide-slate-800 font-mono">
+              <tbody id="generalLedgerTableBody" class="divide-y divide-slate-100 font-mono">
                 <!-- Dynamically populated -->
               </tbody>
             </table>
@@ -530,34 +646,46 @@
       </div>
     </div>
 
-    <!-- TAB 5: GST COMPLIANCE, E-INVOICE & E-WAY BILL -->
-    <div id="tabContent-gst" class="tab-pane hidden space-y-6">
-      <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+    <!-- =================================================================== -->
+    <!-- TAB 5: GST E-INVOICE & E-WAY BILLS                                  -->
+    <!-- =================================================================== -->
+    <div id="tabContent-gst" class="tab-pane hidden space-y-5">
+
+      <!-- DEMO GUIDE CALLOUT -->
+      <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 flex items-start space-x-3 text-xs text-teal-950 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 font-bold">💡</div>
+        <div class="flex-1">
+          <b class="text-sm text-teal-950 block mb-0.5">What to say to client (Demo Guide):</b>
+          <p>"VSC Industries produces 100% compliant Indian GST E-Invoices with 64-character Government IRN hashes, Signed QR Codes, and Driver E-Way Bills formatted per National Informatics Centre (NIC) guidelines."</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-              <i class="fa-solid fa-qrcode text-teal-400"></i> GST E-Invoicing & E-Way Bill Compliance Desk
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-stamp text-teal-600"></i> GST E-Invoicing & Truck E-Way Bill Desk
             </h3>
-            <p class="text-xs text-slate-400">Indian NIC 64-character IRN generation, Signed QR Codes, Part-A/B E-Way Bill Slips</p>
+            <p class="text-xs text-slate-500">Government Portal Verified Invoices & Transporter Permits</p>
           </div>
-          <span class="text-xs bg-teal-500/20 text-teal-300 font-mono px-3 py-1 rounded border border-teal-500/30">
+          <span class="text-xs bg-teal-50 text-teal-800 font-mono font-bold px-3 py-1 rounded border border-teal-200">
             Govt NIC Standard 1.1
           </span>
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
           <table class="w-full text-left text-xs">
-            <thead class="bg-slate-800/80 text-slate-400 font-semibold border-b border-slate-700">
+            <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
               <tr>
                 <th class="p-2.5">Invoice No</th>
-                <th class="p-2.5">Buyer & GSTIN</th>
+                <th class="p-2.5">Buyer (GSTIN)</th>
                 <th class="p-2.5">HSN & Tax Breakdown</th>
                 <th class="p-2.5">Govt IRN Hash</th>
-                <th class="p-2.5">E-Way Bill No</th>
-                <th class="p-2.5 text-right">Compliance Documents</th>
+                <th class="p-2.5">Driver E-Way Bill</th>
+                <th class="p-2.5 text-right">Printable Compliance Documents</th>
               </tr>
             </thead>
-            <tbody id="gstInvoicesTableBody" class="divide-y divide-slate-800">
+            <tbody id="gstInvoicesTableBody" class="divide-y divide-slate-100">
               <!-- Dynamically populated -->
             </tbody>
           </table>
@@ -567,34 +695,36 @@
 
   </main>
 
-  <!-- PRINTABLE MODAL 1: GST TAX INVOICE (E-INVOICE WITH QR) -->
-  <div id="invoiceModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl p-6 text-slate-100 space-y-6">
+  <!-- =================================================================== -->
+  <!-- PRINTABLE MODAL 1: GST TAX INVOICE (With QR Code)                   -->
+  <!-- =================================================================== -->
+  <div id="invoiceModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto custom-scrollbar shadow-2xl p-6 text-slate-900 space-y-5 border border-slate-200">
       
       <!-- Top Modal Bar -->
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 no-print">
-        <h4 class="font-bold text-sm text-teal-400 flex items-center gap-2">
-          <i class="fa-solid fa-receipt"></i> Official GST Tax Invoice (Form GST INV-1)
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3 no-print">
+        <h4 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-receipt text-teal-600"></i> Official GST Tax Invoice (Form GST INV-1)
         </h4>
         <div class="flex items-center space-x-2">
-          <button onclick="window.print()" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+          <button onclick="window.print()" class="bg-teal-600 hover:bg-teal-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-print"></i> Print Invoice
           </button>
-          <button onclick="closeModal('invoiceModal')" class="text-slate-400 hover:text-white px-2 py-1 text-sm">
+          <button onclick="closeModal('invoiceModal')" class="text-slate-400 hover:text-slate-700 px-2 py-1 text-sm font-bold">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
       </div>
 
       <!-- Printable Area -->
-      <div id="printArea" class="bg-white text-slate-900 p-8 rounded-lg shadow-inner text-xs space-y-6">
+      <div id="invoicePrintArea" class="bg-white text-slate-900 p-8 rounded-lg text-xs space-y-6 border border-slate-300">
         <!-- Header -->
-        <div class="flex justify-between items-start border-b-2 border-slate-800 pb-4">
+        <div class="flex justify-between items-start border-b-2 border-slate-900 pb-4">
           <div>
             <h2 class="text-2xl font-black text-slate-900 tracking-tight">VSC INDUSTRIES</h2>
-            <p class="text-xs text-slate-600">Enterprise Trading, Multi-Warehouse & Industrial Supplies</p>
+            <p class="text-xs text-slate-600 font-semibold">Enterprise Trading, Godown & Industrial Hardware</p>
             <p class="text-xs text-slate-600 mt-1">Plot 42-B, Transport Nagar Industrial Area, Lucknow, UP - 226012</p>
-            <p class="text-xs font-mono font-bold text-slate-800 mt-0.5">GSTIN: 09AAECV1924K1Z3 | State: Uttar Pradesh (09)</p>
+            <p class="text-xs font-mono font-bold text-slate-900 mt-0.5">GSTIN: 09AAECV1924K1Z3 | State Code: 09 (Uttar Pradesh)</p>
           </div>
           <div class="text-right">
             <span class="inline-block bg-slate-900 text-white text-[11px] font-black uppercase px-2.5 py-1 rounded tracking-wider">TAX INVOICE</span>
@@ -604,18 +734,18 @@
         </div>
 
         <!-- Bill To -->
-        <div class="grid grid-cols-2 gap-4 border border-slate-300 p-3 rounded">
+        <div class="grid grid-cols-2 gap-4 border border-slate-200 p-3.5 rounded-lg bg-slate-50">
           <div>
-            <span class="text-[10px] uppercase font-bold text-slate-500 block">Details of Receiver (Billed To):</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Details of Receiver (Billed To):</span>
             <p class="font-bold text-sm text-slate-900" id="modalBuyerName">Customer Name</p>
-            <p class="text-xs text-slate-700 font-mono mt-0.5">GSTIN: <span id="modalBuyerGSTIN">--</span></p>
-            <p class="text-xs text-slate-600">Price Tier: <span id="modalBuyerTier" class="font-semibold">Wholesale</span></p>
+            <p class="text-xs text-slate-700 font-mono mt-0.5">GSTIN: <b id="modalBuyerGSTIN">--</b></p>
+            <p class="text-xs text-slate-600 mt-0.5">Price Tier: <span id="modalBuyerTier" class="font-semibold text-teal-700">Wholesale</span></p>
           </div>
           <div class="text-right font-mono">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block">E-Invoice Credentials:</span>
-            <p class="text-[10px] text-slate-600 break-all">IRN: <span id="modalIRN" class="font-bold text-slate-800">--</span></p>
-            <p class="text-xs text-slate-800 mt-1 font-bold">E-Way Bill: <span id="modalEwb">--</span></p>
-            <p class="text-xs text-slate-600">Vehicle: <span id="modalVehicle">UP-32-TR-9011</span></p>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Govt E-Invoice Credentials:</span>
+            <p class="text-[10px] text-slate-600 break-all">IRN: <span id="modalIRN" class="font-bold text-slate-900">--</span></p>
+            <p class="text-xs text-slate-900 mt-1 font-bold">E-Way Bill: <span id="modalEwb">--</span></p>
+            <p class="text-xs text-slate-600">Transport Vehicle: <span id="modalVehicle">UP-32-TR-9011</span></p>
           </div>
         </div>
 
@@ -634,7 +764,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="border border-slate-300 p-2" id="modalItemDesc">Product Name</td>
+              <td class="border border-slate-300 p-2 font-medium" id="modalItemDesc">Product Name</td>
               <td class="border border-slate-300 p-2 text-center font-mono" id="modalHsn">73181500</td>
               <td class="border border-slate-300 p-2 text-right font-mono" id="modalQty">100</td>
               <td class="border border-slate-300 p-2 text-right font-mono" id="modalRate">₹0</td>
@@ -645,7 +775,7 @@
           </tbody>
           <tfoot class="bg-slate-50 font-bold font-mono">
             <tr>
-              <td colspan="6" class="border border-slate-300 p-2 text-right uppercase">Invoice Grand Total:</td>
+              <td colspan="6" class="border border-slate-300 p-2 text-right uppercase">Total Invoice Value (INR):</td>
               <td class="border border-slate-300 p-2 text-right text-sm text-slate-900" id="modalGrandTotal">₹0</td>
             </tr>
           </tfoot>
@@ -653,21 +783,20 @@
 
         <!-- QR Code & Signature Block -->
         <div class="flex justify-between items-center pt-4 border-t border-slate-300">
-          <div class="flex items-center space-x-3">
-            <!-- Simulated Signed QR Code -->
-            <div class="w-24 h-24 bg-slate-900 p-2 rounded flex flex-col items-center justify-center text-white text-[9px] font-mono text-center">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-20 h-20 bg-slate-900 p-2 rounded-lg flex flex-col items-center justify-center text-white text-[9px] font-mono text-center shadow-md">
               <i class="fa-solid fa-qrcode text-3xl mb-1"></i>
               <span>NIC SIGNED</span>
             </div>
             <div class="text-[11px] text-slate-600 max-w-xs">
-              <p class="font-bold text-slate-800">Govt Verified QR Code</p>
-              <p>Digitally signed by NIC E-Invoice Portal. Contains buyer GSTIN, IRN hash, and document date.</p>
+              <b class="text-slate-900 block">Digitally Signed QR Code</b>
+              <p>Verified by NIC E-Invoice System. Includes cryptographic seller signature, buyer GSTIN, IRN hash, and document date.</p>
             </div>
           </div>
           <div class="text-right">
-            <p class="text-xs font-semibold text-slate-800">For VSC INDUSTRIES</p>
+            <p class="text-xs font-bold text-slate-900">For VSC INDUSTRIES</p>
             <div class="h-12 flex items-end justify-end">
-              <span class="font-serif italic text-sm text-slate-700 font-bold border-b border-slate-400 pb-0.5">Vivek Singh Chauhan</span>
+              <span class="font-serif italic text-base text-slate-800 font-bold border-b border-slate-400 pb-0.5">Vivek Singh Chauhan</span>
             </div>
             <p class="text-[10px] text-slate-500 mt-1">Authorized Signatory</p>
           </div>
@@ -677,65 +806,67 @@
     </div>
   </div>
 
-  <!-- PRINTABLE MODAL 2: E-WAY BILL SLIP -->
-  <div id="ewayModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl p-6 text-slate-100 space-y-6">
+  <!-- =================================================================== -->
+  <!-- PRINTABLE MODAL 2: DRIVER E-WAY BILL SLIP                           -->
+  <!-- =================================================================== -->
+  <div id="ewayModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto custom-scrollbar shadow-2xl p-6 text-slate-900 space-y-5 border border-slate-200">
       
       <!-- Top Modal Bar -->
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 no-print">
-        <h4 class="font-bold text-sm text-cyan-400 flex items-center gap-2">
-          <i class="fa-solid fa-truck-moving"></i> Indian National E-Way Bill System (Form GST EWB-01)
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3 no-print">
+        <h4 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-truck-moving text-cyan-600"></i> Government National E-Way Bill (Form GST EWB-01)
         </h4>
         <div class="flex items-center space-x-2">
-          <button onclick="window.print()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+          <button onclick="window.print()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-print"></i> Print Slip
           </button>
-          <button onclick="closeModal('ewayModal')" class="text-slate-400 hover:text-white px-2 py-1 text-sm">
+          <button onclick="closeModal('ewayModal')" class="text-slate-400 hover:text-slate-700 px-2 py-1 text-sm font-bold">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
       </div>
 
       <!-- Printable Area -->
-      <div id="ewayPrintArea" class="bg-white text-slate-900 p-6 rounded-lg text-xs space-y-4 font-sans">
-        <div class="text-center border-b-2 border-slate-800 pb-3">
+      <div id="ewayPrintArea" class="bg-white text-slate-900 p-6 rounded-lg text-xs space-y-4 font-sans border border-slate-300">
+        <div class="text-center border-b-2 border-slate-900 pb-3">
           <h2 class="text-xl font-black tracking-wide text-slate-900 uppercase">E-WAY BILL SYSTEM</h2>
-          <p class="text-xs text-slate-600 font-semibold">Government of India — GST Goods Transport Permit</p>
+          <p class="text-xs text-slate-600 font-semibold">Government of India — Ministry of Finance (CBIC)</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 border border-slate-300 p-3 rounded font-mono text-xs">
+        <div class="grid grid-cols-2 gap-2 border border-slate-300 p-3 rounded bg-slate-50 font-mono text-xs">
           <div>
             <span class="text-[10px] text-slate-500 block uppercase font-bold">E-Way Bill No:</span>
             <span id="ewbModalNo" class="font-bold text-sm text-slate-900">EWB-3910-0000</span>
           </div>
           <div class="text-right">
-            <span class="text-[10px] text-slate-500 block uppercase font-bold">Generated Date:</span>
+            <span class="text-[10px] text-slate-500 block uppercase font-bold">Generation Date:</span>
             <span id="ewbModalDate" class="text-slate-700">2026-11-14 16:30</span>
           </div>
         </div>
 
         <!-- PART-A -->
-        <div class="border border-slate-300 rounded p-3 space-y-2">
-          <h5 class="font-bold text-xs uppercase text-slate-800 bg-slate-100 p-1 rounded">PART - A (Consignment Details)</h5>
+        <div class="border border-slate-300 rounded p-3.5 space-y-2">
+          <h5 class="font-bold text-xs uppercase text-slate-900 bg-slate-100 p-1.5 rounded">PART - A (Consignment Details)</h5>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div><b>GSTIN of Supplier:</b> 09AAECV1924K1Z3 (VSC Industries)</div>
             <div><b>Dispatch From:</b> Lucknow, Uttar Pradesh</div>
             <div><b>GSTIN of Recipient:</b> <span id="ewbBuyerGstin" class="font-mono">--</span></div>
             <div><b>To Destination:</b> <span id="ewbBuyerLoc">--</span></div>
-            <div><b>Doc No & Date:</b> <span id="ewbDocRef" class="font-mono">INV-26-000</span></div>
-            <div><b>Value of Goods:</b> <span id="ewbValue" class="font-mono font-bold">₹0</span></div>
+            <div><b>Tax Invoice Ref:</b> <span id="ewbDocRef" class="font-mono font-bold">INV-26-000</span></div>
+            <div><b>Value of Goods:</b> <span id="ewbValue" class="font-mono font-bold text-teal-700">₹0</span></div>
             <div><b>HSN Code:</b> <span id="ewbHsn" class="font-mono">73181500</span></div>
-            <div><b>Reason for Transport:</b> Supply / Outward B2B Sale</div>
+            <div><b>Reason for Transport:</b> Outward B2B Supply</div>
           </div>
         </div>
 
         <!-- PART-B -->
-        <div class="border border-slate-300 rounded p-3 space-y-2">
-          <h5 class="font-bold text-xs uppercase text-slate-800 bg-slate-100 p-1 rounded">PART - B (Vehicle & Transporter Details)</h5>
+        <div class="border border-slate-300 rounded p-3.5 space-y-2">
+          <h5 class="font-bold text-xs uppercase text-slate-900 bg-slate-100 p-1.5 rounded">PART - B (Vehicle & Transporter Road Permit)</h5>
           <div class="grid grid-cols-2 gap-2 text-xs">
-            <div><b>Mode:</b> Road Transport</div>
-            <div><b>Vehicle No:</b> <span id="ewbVehicle" class="font-mono font-bold">UP-32-TR-9011</span></div>
-            <div><b>Approx Distance:</b> 385 km</div>
+            <div><b>Mode:</b> Road Transport (Heavy Goods Vehicle)</div>
+            <div><b>Vehicle Registration No:</b> <span id="ewbVehicle" class="font-mono font-bold text-slate-900">UP-32-TR-9011</span></div>
+            <div><b>Approx Road Distance:</b> 385 km</div>
             <div><b>Valid Upto:</b> 2026-11-17 (3 Days)</div>
           </div>
         </div>
@@ -749,7 +880,7 @@
   </div>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-teal-500 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0">
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0 border border-teal-500">
     <i id="toastIcon" class="fa-solid fa-circle-check text-teal-400 text-lg"></i>
     <span id="toastMsg" class="text-xs font-semibold">Notification</span>
   </div>
@@ -765,16 +896,71 @@
       stock_transfers: [],
       accounting: {},
       currentRole: 'owner',
+      activeTab: 'sales',
       activeWarehouseFilter: 'All'
     };
 
-    // Helper: Clean currency formatting for INR without floating point bugs
+    // Role Configuration Matrix
+    const ROLES = {
+      owner: {
+        name: '👑 Vivek Singh Chauhan (Owner — Full Access)',
+        badge: 'OWNER PROFILE',
+        badgeClass: 'bg-teal-700 text-white',
+        desc: 'Logged in as <b>Vivek Singh Chauhan</b>. You have full access to override credit limits, view company revenue & margins, and manage all 5 modules.',
+        allowedTabs: ['sales', 'procurement', 'inventory', 'accounting', 'gst'],
+        canOverrideCredit: true,
+        showFinancialKPIs: true,
+        securityNotice: 'Security: All 5 Modules Enabled'
+      },
+      sales: {
+        name: '💼 Sales Executive (Order Desk)',
+        badge: 'SALES PROFILE',
+        badgeClass: 'bg-blue-600 text-white',
+        desc: 'Sales & Billing Desk. You can issue quotations, confirm orders, and view GST Invoices. Purchasing, Godown Stock, and Accounting are locked.',
+        allowedTabs: ['sales', 'gst'],
+        canOverrideCredit: false,
+        showFinancialKPIs: false,
+        securityNotice: 'Security: Buying, Godown & Accounting Tabs Hidden'
+      },
+      procurement: {
+        name: '🛒 Purchase Officer (Buying Desk)',
+        badge: 'BUYING PROFILE',
+        badgeClass: 'bg-indigo-600 text-white',
+        desc: 'Procurement Officer. You can compare supplier quotes, issue Purchase Orders, and check stock levels. Sales, Accounting, and Profits are locked.',
+        allowedTabs: ['procurement', 'inventory'],
+        canOverrideCredit: false,
+        showFinancialKPIs: false,
+        securityNotice: 'Security: Sales, Accounting & Profits Hidden'
+      },
+      warehouse: {
+        name: '🏭 Warehouse / Godown Manager',
+        badge: 'GODOWN PROFILE',
+        badgeClass: 'bg-amber-600 text-white',
+        desc: 'Godown Manager. You can check stock, execute batch transfers, and verify truck deliveries (GRN). Financials and Customer Sales are locked.',
+        allowedTabs: ['inventory', 'procurement'],
+        canOverrideCredit: false,
+        showFinancialKPIs: false,
+        securityNotice: 'Security: Company Revenue, Profits & Sales Hidden'
+      },
+      accounts: {
+        name: '📊 Chartered Accountant (CA — Accounts & GST)',
+        badge: 'ACCOUNTS PROFILE',
+        badgeClass: 'bg-purple-700 text-white',
+        desc: 'Chartered Accountant. You have access to Double-Entry General Ledger, Trial Balance, P&L, and GST E-Invoicing / E-Way Bills.',
+        allowedTabs: ['accounting', 'gst'],
+        canOverrideCredit: false,
+        showFinancialKPIs: true,
+        securityNotice: 'Security: Operations Restricted to Audit & Tax'
+      }
+    };
+
+    // Currency Formatter (Zero floating-point bugs)
     function formatINR(val) {
       const rounded = Math.round(Number(val) || 0);
       return '₹' + rounded.toLocaleString('en-IN');
     }
 
-    // Show Toast
+    // Toast Notification
     function showToast(msg, isError = false) {
       const toast = document.getElementById('toast');
       const toastMsg = document.getElementById('toastMsg');
@@ -795,11 +981,48 @@
       }, 3500);
     }
 
+    // Role Switcher Handler
+    function handleRoleChange() {
+      const selected = document.getElementById('roleSelector').value;
+      state.currentRole = selected;
+      const roleCfg = ROLES[selected] || ROLES.owner;
+
+      // Update Profile Banner
+      document.getElementById('roleBadge').className = `${roleCfg.badgeClass} font-bold px-2 py-0.5 rounded text-[11px] tracking-wide uppercase`;
+      document.getElementById('roleBadge').innerText = roleCfg.badge;
+      document.getElementById('roleDescription').innerHTML = roleCfg.desc;
+      document.getElementById('roleSecurityNotice').innerText = roleCfg.securityNotice;
+
+      // Filter Navigation Tabs
+      const allTabs = ['sales', 'procurement', 'inventory', 'accounting', 'gst'];
+      allTabs.forEach(tab => {
+        const btn = document.getElementById(`tabBtn-${tab}`);
+        if (btn) {
+          if (roleCfg.allowedTabs.includes(tab)) {
+            btn.classList.remove('hidden');
+          } else {
+            btn.classList.add('hidden');
+          }
+        }
+      });
+
+      // If active tab is not allowed, switch to first allowed tab
+      if (!roleCfg.allowedTabs.includes(state.activeTab)) {
+        switchTab(roleCfg.allowedTabs[0]);
+      } else {
+        switchTab(state.activeTab);
+      }
+
+      showToast(`Active Profile: ${roleCfg.name.split(' (')[0]}`);
+      renderAll();
+    }
+
     // Switch Tabs
     function switchTab(tabId) {
+      state.activeTab = tabId;
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-400 hover:text-white hover:bg-slate-800';
+        btn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100';
       });
 
       const pane = document.getElementById(`tabContent-${tabId}`);
@@ -807,18 +1030,11 @@
 
       const activeBtn = document.getElementById(`tabBtn-${tabId}`);
       if (activeBtn) {
-        activeBtn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition bg-teal-600 text-white shadow-lg shadow-teal-600/30';
+        activeBtn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition bg-teal-600 text-white shadow-sm';
       }
     }
 
-    // Role Switcher
-    function handleRoleChange() {
-      state.currentRole = document.getElementById('roleSelector').value;
-      showToast(`Switched active role to: ${document.getElementById('roleSelector').selectedOptions[0].text}`);
-      renderAll();
-    }
-
-    // Modals
+    // Modal Helpers
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
@@ -856,6 +1072,7 @@
       renderSalesOrdersTable();
       renderRFQs();
       renderPurchaseOrdersTable();
+      renderGodownSummaryCards();
       renderInventoryTable();
       renderStockTransferForm();
       renderAccounting();
@@ -864,22 +1081,26 @@
 
     function renderKPIs() {
       const kpis = state.kpis || {};
+      const roleCfg = ROLES[state.currentRole] || ROLES.owner;
+
       document.getElementById('kpiCreditHolds').innerText = kpis.credit_holds || 0;
       document.getElementById('kpiLowStock').innerText = kpis.low_stock_alerts || 0;
       document.getElementById('kpiOpenPOs').innerText = kpis.open_pos || 0;
-      document.getElementById('kpiRevenue').innerText = formatINR(kpis.total_revenue || 0);
+      document.getElementById('kpiRevenue').innerText = roleCfg.showFinancialKPIs ? formatINR(kpis.total_revenue || 0) : '🔒 Restricted';
 
       const statusEl = document.getElementById('kpiLedgerStatus');
       if (kpis.is_ledger_balanced) {
-        statusEl.className = 'font-bold font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20';
+        statusEl.className = 'font-bold font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30';
         statusEl.innerText = 'Balanced (Dr=Cr)';
       } else {
-        statusEl.className = 'font-bold font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20';
+        statusEl.className = 'font-bold font-mono text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded border border-rose-500/30';
         statusEl.innerText = 'UNBALANCED!';
       }
     }
 
-    // TAB 1 RENDERING
+    // =========================================================================
+    // TAB 1 LOGIC: SALES & CREDIT LIMIT
+    // =========================================================================
     function renderCustomerSelect() {
       const sel = document.getElementById('salesCustomerSelect');
       const curVal = sel.value;
@@ -894,7 +1115,6 @@
     function renderProductSelect() {
       const sel = document.getElementById('salesProductSelect');
       const curVal = sel.value;
-      // Get unique products
       const uniqueProds = [...new Set(state.inventory.map(b => b.product_name))];
       sel.innerHTML = uniqueProds.map(p => `
         <option value="${p}" ${curVal == p ? 'selected' : ''}>${p}</option>
@@ -912,14 +1132,15 @@
       document.getElementById('prevTier').innerText = cust.price_tier;
       
       const available = Math.max(0, cust.credit_limit - cust.current_outstanding);
-      document.getElementById('prevAvailable').innerText = formatINR(available);
-
       const pct = Math.min(100, Math.round((cust.current_outstanding / cust.credit_limit) * 100));
+
       const bar = document.getElementById('exposureBar');
       bar.style.width = `${pct}%`;
-      bar.className = pct >= 90 ? 'h-2 rounded-full bg-rose-500 transition-all duration-300' :
-                      pct >= 75 ? 'h-2 rounded-full bg-amber-400 transition-all duration-300' :
-                                  'h-2 rounded-full bg-teal-500 transition-all duration-300';
+      bar.className = pct >= 90 ? 'h-2.5 rounded-full bg-rose-500 transition-all duration-300' :
+                      pct >= 75 ? 'h-2.5 rounded-full bg-amber-500 transition-all duration-300' :
+                                  'h-2.5 rounded-full bg-teal-600 transition-all duration-300';
+
+      document.getElementById('creditMeterText').innerHTML = `Used <b>${pct}%</b> (Available: ${formatINR(available)})`;
 
       updateSalesPriceCalculation();
     }
@@ -961,6 +1182,28 @@
       }
     }
 
+    // Quick-Fill Demo Button
+    function quickFillCreditBreachOrder() {
+      // 1. Select Sharma Industrial Traders (id: 1)
+      const custSel = document.getElementById('salesCustomerSelect');
+      custSel.value = "1";
+      updateCustomerExposurePreview();
+
+      // 2. Select Galvanized Steel Fasteners (M12x50)
+      const prodSel = document.getElementById('salesProductSelect');
+      prodSel.value = "Galvanized Steel Fasteners (M12x50)";
+
+      // 3. Select Central Hub - Lucknow
+      const whSel = document.getElementById('salesWarehouseSelect');
+      whSel.value = "Central Hub - Lucknow";
+
+      // 4. Set Qty to 1250 units (Rate 65 -> Base 81,250 + GST = 95,875 -> Breaches limit!)
+      document.getElementById('salesQtyInput').value = "1250";
+      updateSalesPriceCalculation();
+
+      showToast("Form pre-filled with ₹95,875 order for Sharma Industrial Traders! Click 'Confirm Order' to demonstrate the Credit Hold.");
+    }
+
     async function submitSalesOrder(isQuotation) {
       const custId = parseInt(document.getElementById('salesCustomerSelect').value);
       const prodName = document.getElementById('salesProductSelect').value;
@@ -989,7 +1232,7 @@
         if (!res.ok) throw new Error(data.detail || 'Order creation failed');
 
         if (data.credit_alert) {
-          showToast(`🚨 CREDIT HOLD: Order ${data.order.doc_no} exceeds customer credit limit!`, true);
+          showToast(`🚨 AUTOMATIC CREDIT HOLD: Order ${data.order.doc_no} exceeds customer credit limit!`, true);
         } else {
           showToast(`✅ ${isQuotation ? 'Quotation' : 'Confirmed Order'} ${data.order.doc_no} created successfully!`);
         }
@@ -1001,61 +1244,78 @@
 
     function renderSalesOrdersTable() {
       const tbody = document.getElementById('salesOrdersTableBody');
+      const isOwner = (state.currentRole === 'owner');
+
       tbody.innerHTML = state.sales_orders.map(o => {
         const isHold = o.credit_status === 'Credit Hold - Exceeds Limit';
         const isOverridden = o.credit_status === 'Owner Overridden';
-        
-        // Stage Actions
+
+        // Stage Action Button
         let stageActionBtn = '';
         if (o.stage === 'Quotation') {
-          stageActionBtn = `<button onclick="advanceStage(${o.id})" class="bg-cyan-600/30 hover:bg-cyan-600 text-cyan-300 hover:text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-cyan-500/30 transition">Convert to SO &rarr;</button>`;
+          stageActionBtn = `<button onclick="advanceStage(${o.id})" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-800 px-2.5 py-1 rounded text-xs font-semibold border border-cyan-200 transition">Convert to Order &rarr;</button>`;
         } else if (o.stage === 'Confirmed Order') {
           if (isHold) {
-            stageActionBtn = `<button disabled class="bg-slate-800 text-slate-500 px-2.5 py-1 rounded text-[11px] font-semibold cursor-not-allowed">Blocked by Hold</button>`;
+            stageActionBtn = `<span class="bg-rose-50 text-rose-700 px-2 py-0.5 rounded text-[11px] font-bold border border-rose-200 block text-center">Invoicing Blocked</span>`;
           } else {
-            stageActionBtn = `<button onclick="advanceStage(${o.id})" class="bg-teal-600 hover:bg-teal-500 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow-sm transition">Generate Invoice &rarr;</button>`;
+            stageActionBtn = `<button onclick="advanceStage(${o.id})" class="bg-teal-600 hover:bg-teal-700 text-white px-2.5 py-1 rounded text-xs font-bold shadow-sm transition">Generate Tax Invoice &rarr;</button>`;
           }
         } else {
-          stageActionBtn = `<span class="bg-emerald-500/20 text-emerald-400 font-mono text-[11px] px-2 py-0.5 rounded border border-emerald-500/30 font-bold">Invoiced</span>`;
+          stageActionBtn = `<span class="bg-emerald-50 text-emerald-700 font-mono text-[11px] px-2 py-0.5 rounded border border-emerald-200 font-bold">Tax Invoiced</span>`;
         }
 
-        // Credit Gate Badge
+        // Credit Gate Badge with Role-Based Permission Lock
         let creditBadge = '';
         if (isHold) {
-          creditBadge = `
-            <div class="space-y-1">
-              <span class="inline-block bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded font-bold border border-rose-500/40 animate-pulse">
-                🚨 CREDIT HOLD
-              </span>
-              ${state.currentRole === 'owner' ? `
-                <button onclick="overrideCredit(${o.id})" class="block text-[10px] bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-2 py-0.5 rounded border border-amber-500/40 font-bold">
-                  🔓 Owner Override
+          if (isOwner) {
+            creditBadge = `
+              <div class="space-y-1">
+                <span class="inline-block bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded font-black border border-rose-300">
+                  🚨 CREDIT HOLD
+                </span>
+                <button onclick="overrideCredit(${o.id})" class="block text-[10px] bg-amber-500 hover:bg-amber-600 text-white px-2 py-0.5 rounded font-bold shadow-sm transition">
+                  🔓 Owner Override: Approve
                 </button>
-              ` : ''}
-            </div>
-          `;
+              </div>
+            `;
+          } else {
+            creditBadge = `
+              <div class="space-y-1">
+                <span class="inline-block bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded font-black border border-rose-300">
+                  🚨 CREDIT HOLD
+                </span>
+                <span class="block text-[10px] text-slate-500 italic">
+                  🔒 Locked (Owner Only)
+                </span>
+              </div>
+            `;
+          }
         } else if (isOverridden) {
-          creditBadge = `<span class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-500/30">Owner Overridden</span>`;
+          creditBadge = `<span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-300">Owner Overridden</span>`;
         } else {
-          creditBadge = `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-500/30">Approved</span>`;
+          creditBadge = `<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-300">Approved</span>`;
         }
 
-        // Delivery Tracker
-        let deliveryBtn = `<button onclick="advanceDelivery(${o.id})" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded border border-slate-700 font-medium">${o.delivery_status} &rarr;</button>`;
-        if (o.delivery_status === 'Delivered') {
-          deliveryBtn = `<span class="text-emerald-400 text-[11px] font-bold"><i class="fa-solid fa-check-double mr-1"></i> Delivered</span>`;
+        // Delivery Status Tracker
+        let deliveryBtn = '';
+        if (o.stage !== 'Invoiced') {
+          deliveryBtn = `<span class="text-slate-400 text-[11px]">Awaiting Invoice</span>`;
+        } else if (o.delivery_status === 'Delivered') {
+          deliveryBtn = `<span class="text-emerald-700 font-bold text-xs"><i class="fa-solid fa-check-double mr-1"></i> Delivered</span>`;
+        } else {
+          deliveryBtn = `<button onclick="advanceDelivery(${o.id})" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded border border-slate-300 font-medium transition">${o.delivery_status} &rarr;</button>`;
         }
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
-            <td class="p-2.5 font-mono font-bold text-teal-400">${o.doc_no}</td>
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-2.5 font-mono font-bold text-teal-700">${o.doc_no}</td>
             <td class="p-2.5">
-              <div class="font-bold text-white">${o.customer_name}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${o.customer_gstin} (${o.price_tier})</div>
+              <div class="font-bold text-slate-900">${o.customer_name}</div>
+              <div class="text-[10px] text-slate-500 font-mono">${o.customer_gstin} (${o.price_tier})</div>
             </td>
             <td class="p-2.5">
-              <div class="text-slate-200">${o.product_name} (${o.qty} units)</div>
-              <div class="font-mono font-bold text-teal-300">${formatINR(o.total_amount)} <span class="text-[10px] text-slate-400 font-normal">incl. GST</span></div>
+              <div class="text-slate-800">${o.product_name} (${o.qty} units)</div>
+              <div class="font-mono font-bold text-teal-800">${formatINR(o.total_amount)} <span class="text-[10px] text-slate-500 font-normal">incl. GST</span></div>
             </td>
             <td class="p-2.5">${creditBadge}</td>
             <td class="p-2.5">${stageActionBtn}</td>
@@ -1092,6 +1352,7 @@
       try {
         const res = await fetch(`/api/sales/advance-delivery/${orderId}`, { method: 'POST' });
         const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Delivery update failed');
         showToast(`Delivery updated: ${data.new_delivery_status || data.message}`);
         await loadBootstrap();
       } catch (err) {
@@ -1099,7 +1360,9 @@
       }
     }
 
-    // TAB 2: PROCUREMENT & RFQ
+    // =========================================================================
+    // TAB 2 LOGIC: SUPPLIER QUOTES & TRUCK RECEIVING (GRN)
+    // =========================================================================
     function renderRFQs() {
       const container = document.getElementById('rfqCardsContainer');
       container.innerHTML = state.rfqs.map(rfq => {
@@ -1108,45 +1371,45 @@
         const isAwarded = rfq.status === 'Awarded PO';
 
         return `
-          <div class="bg-slate-800/80 p-4 rounded-xl border ${isAwarded ? 'border-teal-500/50 bg-teal-950/20' : 'border-slate-700'} space-y-3">
+          <div class="bg-slate-50 p-4 rounded-xl border ${isAwarded ? 'border-teal-500 bg-teal-50/50' : 'border-slate-200'} space-y-3">
             <div class="flex justify-between items-start">
               <div>
-                <h4 class="font-bold text-sm text-white">${rfq.supplier_name}</h4>
-                <p class="text-[10px] text-slate-400 font-mono">${rfq.supplier_gstin}</p>
+                <h4 class="font-bold text-sm text-slate-900">${rfq.supplier_name}</h4>
+                <p class="text-[10px] text-slate-500 font-mono">${rfq.supplier_gstin}</p>
               </div>
-              ${isAwarded ? '<span class="bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">AWARDED</span>' : ''}
+              ${isAwarded ? '<span class="bg-teal-700 text-white text-[10px] font-bold px-2 py-0.5 rounded">AWARDED PO</span>' : ''}
             </div>
 
             <div class="space-y-1.5 text-xs font-mono">
-              <div class="flex justify-between">
-                <span class="text-slate-400">Quoted Rate:</span>
-                <span class="font-bold text-white">${formatINR(rfq.quoted_rate)} / unit</span>
+              <div class="flex justify-between text-slate-600">
+                <span>Quoted Rate:</span>
+                <span class="font-bold text-slate-900">${formatINR(rfq.quoted_rate)} / unit</span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">Total Lot (200 Units):</span>
-                <span class="font-bold text-teal-300">${formatINR(rfq.quoted_rate * rfq.qty_required)}</span>
+              <div class="flex justify-between text-slate-600">
+                <span>Total Lot (200 Units):</span>
+                <span class="font-bold text-teal-800">${formatINR(rfq.quoted_rate * rfq.qty_required)}</span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">Lead Time:</span>
-                <span class="text-white">${rfq.lead_time_days} Days</span>
+              <div class="flex justify-between text-slate-600">
+                <span>Delivery Lead Time:</span>
+                <span class="text-slate-900 font-semibold">${rfq.lead_time_days} Days</span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">Payment Terms:</span>
-                <span class="text-slate-300 font-sans">${rfq.payment_terms}</span>
+              <div class="flex justify-between text-slate-600">
+                <span>Payment Terms:</span>
+                <span class="text-slate-800 font-sans font-medium">${rfq.payment_terms}</span>
               </div>
             </div>
 
             <div class="flex flex-wrap gap-1.5 pt-1">
-              ${isLowest ? '<span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-500/30">🏆 Lowest Price</span>' : ''}
-              ${isFastest ? '<span class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2 py-0.5 rounded font-bold border border-cyan-500/30">⚡ Fastest Delivery</span>' : ''}
+              ${isLowest ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-300">🏆 Lowest Price</span>' : ''}
+              ${isFastest ? '<span class="bg-cyan-100 text-cyan-800 text-[10px] px-2 py-0.5 rounded font-bold border border-cyan-300">⚡ Fastest Delivery</span>' : ''}
             </div>
 
             ${!isAwarded ? `
-              <button onclick="awardRFQ(${rfq.id})" class="w-full bg-teal-600 hover:bg-teal-500 text-white py-2 rounded-lg text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+              <button onclick="awardRFQ(${rfq.id})" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-check"></i> Award & Create PO
               </button>
             ` : `
-              <div class="text-center text-teal-400 text-xs font-semibold py-1">
+              <div class="text-center text-teal-700 text-xs font-bold py-1 bg-teal-100/60 rounded">
                 <i class="fa-solid fa-check-double mr-1"></i> PO Generated
               </div>
             `}
@@ -1169,40 +1432,58 @@
     function renderPurchaseOrdersTable() {
       const tbody = document.getElementById('purchaseOrdersTableBody');
       tbody.innerHTML = state.purchase_orders.map(po => {
-        const hasDiscrepancy = po.shortage_qty > 0;
-        const isMatched = po.status === 'GRN Matched & Stocked';
+        const isReceived = (po.received_qty > 0 || po.status === 'GRN Matched & Stocked' || po.status === 'GRN Discrepancy / Shortage');
+        const shortageAmount = Math.round(po.shortage_qty * po.unit_rate);
 
+        // Shortage & Verification UI
         let statusBadge = '';
-        if (hasDiscrepancy) {
-          statusBadge = `<span class="bg-rose-500/20 text-rose-400 font-bold px-2 py-0.5 rounded text-[10px] border border-rose-500/40">⚠️ Shortage: ${po.shortage_qty} Units</span>`;
-        } else if (isMatched) {
-          statusBadge = `<span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded text-[10px] border border-emerald-500/30">✅ Matched & Stocked</span>`;
+        let actionArea = '';
+
+        if (isReceived) {
+          if (po.shortage_qty > 0) {
+            statusBadge = `
+              <div class="text-center">
+                <span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded text-[10px] border border-rose-300">
+                  ⚠️ Shortage: ${po.shortage_qty} Units
+                </span>
+              </div>
+            `;
+            actionArea = `
+              <div class="text-right">
+                <span class="inline-block bg-emerald-50 text-emerald-800 font-semibold text-xs px-2.5 py-1 rounded border border-emerald-200">
+                  <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Verified — <b>${formatINR(shortageAmount)} Auto-Deducted</b> for ${po.shortage_qty} Missing Units
+                </span>
+              </div>
+            `;
+          } else {
+            statusBadge = `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px] border border-emerald-300">✅ 100% Matched</span>`;
+            actionArea = `<span class="text-emerald-700 font-bold text-xs"><i class="fa-solid fa-circle-check mr-1"></i> Delivery Complete & Stocked</span>`;
+          }
         } else {
-          statusBadge = `<span class="bg-slate-700 text-slate-300 px-2 py-0.5 rounded text-[10px]">PO Approved</span>`;
+          statusBadge = `<span class="bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded text-[10px]">Awaiting Truck</span>`;
+          actionArea = `
+            <div class="flex items-center justify-end space-x-1.5">
+              <span class="text-[11px] text-slate-500">Count:</span>
+              <input type="number" id="grnInput-${po.id}" placeholder="Received" value="92" class="w-16 bg-white text-slate-900 text-xs p-1 rounded border border-slate-300 text-center font-mono font-bold focus:border-teal-600">
+              <button onclick="receiveGRN(${po.id})" class="bg-teal-600 hover:bg-teal-700 text-white px-2.5 py-1 rounded text-xs font-bold shadow-sm transition flex items-center gap-1">
+                <i class="fa-solid fa-truck"></i> 🚚 Log Delivery & Update Godown
+              </button>
+            </div>
+          `;
         }
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
-            <td class="p-2.5 font-mono font-bold text-teal-400">${po.po_no}</td>
-            <td class="p-2.5 font-semibold text-white">${po.supplier_name}</td>
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-2.5 font-mono font-bold text-teal-700">${po.po_no}</td>
+            <td class="p-2.5 font-bold text-slate-900">${po.supplier_name}</td>
             <td class="p-2.5">
-              <div class="text-slate-200">${po.product_name}</div>
-              <div class="text-[10px] text-slate-400">${po.warehouse_name}</div>
+              <div class="text-slate-800 font-medium">${po.product_name}</div>
+              <div class="text-[10px] text-slate-500 font-mono">${po.warehouse_name}</div>
             </td>
-            <td class="p-2.5 font-mono">${po.ordered_qty}</td>
-            <td class="p-2.5 font-mono text-cyan-300 font-bold">${po.received_qty}</td>
-            <td class="p-2.5 font-mono">${po.shortage_qty > 0 ? `<span class="text-rose-400 font-bold">-${po.shortage_qty}</span>` : '0'}</td>
+            <td class="p-2.5 font-mono text-center font-semibold">${po.ordered_qty}</td>
+            <td class="p-2.5 font-mono text-center font-bold text-teal-800">${po.received_qty}</td>
             <td class="p-2.5">${statusBadge}</td>
-            <td class="p-2.5 text-right">
-              ${!isMatched ? `
-                <div class="flex items-center justify-end space-x-1.5">
-                  <input type="number" id="grnInput-${po.id}" placeholder="Received" value="${po.ordered_qty}" class="w-16 bg-slate-800 text-white text-xs p-1 rounded border border-slate-700 text-center font-mono">
-                  <button onclick="receiveGRN(${po.id})" class="bg-teal-600 hover:bg-teal-500 text-white px-2.5 py-1 rounded text-xs font-bold transition">Inward</button>
-                </div>
-              ` : `
-                <span class="text-slate-500 text-xs font-mono">Inward Done</span>
-              `}
-            </td>
+            <td class="p-2.5 text-right">${actionArea}</td>
           </tr>
         `;
       }).join('');
@@ -1225,12 +1506,51 @@
       }
     }
 
-    // TAB 3: INVENTORY & STOCK TRANSFERS
+    // =========================================================================
+    // TAB 3 LOGIC: GODOWN STOCK & BATCH TRANSFERS
+    // =========================================================================
+    function renderGodownSummaryCards() {
+      const container = document.getElementById('godownSummaryCards');
+      const godowns = [
+        { name: 'Central Hub - Lucknow', icon: 'fa-warehouse' },
+        { name: 'North Depot - Delhi', icon: 'fa-building-shield' },
+        { name: 'West Branch - Mumbai', icon: 'fa-anchor' }
+      ];
+
+      container.innerHTML = godowns.map(g => {
+        const batches = state.inventory.filter(b => b.warehouse_name === g.name);
+        const totalItems = batches.reduce((sum, b) => sum + b.qty_on_hand, 0);
+        const totalVal = batches.reduce((sum, b) => sum + (b.qty_on_hand * b.unit_cost), 0);
+        const lowAlerts = batches.filter(b => b.qty_on_hand <= b.reorder_level).length;
+
+        return `
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <i class="fa-solid ${g.icon} text-teal-600"></i> ${g.name}
+              </span>
+              ${lowAlerts > 0 ? `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${lowAlerts} Low</span>` : '<span class="text-emerald-700 text-xs font-bold">Optimal</span>'}
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
+              <div>
+                <span class="text-slate-500 block text-[10px]">Total Stock Count:</span>
+                <span class="text-sm font-bold text-slate-900">${totalItems.toLocaleString('en-IN')} Units</span>
+              </div>
+              <div class="text-right">
+                <span class="text-slate-500 block text-[10px]">Stock Valuation:</span>
+                <span class="text-sm font-bold text-teal-700">${formatINR(totalVal)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function filterInventory(wh) {
       state.activeWarehouseFilter = wh;
       document.querySelectorAll('#warehouseFilterBtns button').forEach(b => {
-        b.className = b.innerText === wh ? 'px-3 py-1 rounded text-xs font-semibold bg-teal-600 text-white' :
-                                           'px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white';
+        b.className = b.innerText === wh ? 'px-3 py-1 rounded text-xs font-semibold bg-teal-600 text-white shadow-sm' :
+                                           'px-3 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200';
       });
       renderInventoryTable();
     }
@@ -1249,29 +1569,25 @@
         const isExpiring = b.expiry_date.startsWith('2026');
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
+          <tr class="hover:bg-slate-50/80 transition">
             <td class="p-2.5">
-              <div class="font-bold text-white">${b.product_name}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${b.sku} | HSN: ${b.hsn_code}</div>
+              <div class="font-bold text-slate-900">${b.product_name}</div>
+              <div class="text-[10px] text-slate-500 font-mono">${b.sku} | HSN: ${b.hsn_code}</div>
             </td>
-            <td class="p-2.5 text-slate-300">${b.warehouse_name}</td>
+            <td class="p-2.5 text-slate-700 font-medium">${b.warehouse_name}</td>
             <td class="p-2.5 font-mono">
-              <div>${b.batch_no}</div>
-              <div class="text-[10px] ${isExpiring ? 'text-rose-400 font-bold' : 'text-slate-400'}">Exp: ${b.expiry_date}</div>
+              <div class="font-bold text-slate-900">${b.batch_no}</div>
+              <div class="text-[10px] ${isExpiring ? 'text-rose-600 font-bold' : 'text-slate-500'}">Exp: ${b.expiry_date}</div>
             </td>
-            <td class="p-2.5 font-mono font-bold ${isLow ? 'text-amber-400' : 'text-teal-300'}">
+            <td class="p-2.5 font-mono text-center font-bold ${isLow ? 'text-amber-600' : 'text-teal-700'}">
               ${b.qty_on_hand}
             </td>
-            <td class="p-2.5 font-mono text-slate-300">${formatINR(b.unit_cost)}</td>
-            <td class="p-2.5 font-mono text-[11px]">
-              <span class="text-teal-300">${formatINR(b.wholesale_price)}</span> /
-              <span class="text-cyan-300">${formatINR(b.dealer_price)}</span> /
-              <span class="text-slate-300">${formatINR(b.retail_price)}</span>
-            </td>
-            <td class="p-2.5">
-              ${isExpiring ? '<span class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded font-bold border border-rose-500/30">EXPIRING</span>' :
-                isLow ? '<span class="bg-amber-500/20 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-500/30">LOW STOCK</span>' :
-                '<span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-500/30">OPTIMAL</span>'}
+            <td class="p-2.5 font-mono text-right text-slate-600">${formatINR(b.unit_cost)}</td>
+            <td class="p-2.5 font-mono text-right font-bold text-teal-800">${formatINR(b.wholesale_price)}</td>
+            <td class="p-2.5 text-center">
+              ${isExpiring ? '<span class="bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded font-bold border border-rose-300">⏳ EXPIRING SOON</span>' :
+                isLow ? '<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-300">⚠️ LOW STOCK</span>' :
+                '<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-300">✅ OPTIMAL</span>'}
             </td>
           </tr>
         `;
@@ -1288,16 +1604,16 @@
 
       const hist = document.getElementById('transferHistoryList');
       if (state.stock_transfers.length === 0) {
-        hist.innerHTML = '<p class="text-slate-500">No transfers recorded yet.</p>';
+        hist.innerHTML = '<p class="text-slate-400 italic">No transfers recorded yet.</p>';
       } else {
         hist.innerHTML = state.stock_transfers.map(t => `
-          <div class="bg-slate-800/60 p-2 rounded border border-slate-700/50">
-            <div class="flex justify-between font-mono font-bold text-teal-400">
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <div class="flex justify-between font-mono font-bold text-teal-700">
               <span>${t.transfer_no}</span>
               <span>${t.qty} units</span>
             </div>
-            <div class="text-slate-300">${t.product_name}</div>
-            <div class="text-[10px] text-slate-400">${t.source_warehouse} &rarr; ${t.target_warehouse}</div>
+            <div class="text-slate-800 font-medium">${t.product_name}</div>
+            <div class="text-[10px] text-slate-500 font-mono">${t.source_warehouse} &rarr; ${t.target_warehouse}</div>
           </div>
         `).join('');
       }
@@ -1311,7 +1627,7 @@
       const qty = parseFloat(document.getElementById('trfQtyInput').value) || 0;
 
       if (srcWh === tgtWh) {
-        showToast("Source and destination warehouses cannot be the same", true);
+        showToast("Source and destination godowns cannot be identical", true);
         return;
       }
       if (qty <= 0) {
@@ -1340,32 +1656,42 @@
       }
     }
 
-    // TAB 4: ACCOUNTING & TRIAL BALANCE
+    // =========================================================================
+    // TAB 4 LOGIC: AUTO-PROFIT & TRIAL BALANCE
+    // =========================================================================
     function renderAccounting() {
       const acc = state.accounting || {};
       const pnl = acc.pnl || {};
+      const roleCfg = ROLES[state.currentRole] || ROLES.owner;
 
-      document.getElementById('accRevenue').innerText = formatINR(pnl.total_revenue || 0);
-      document.getElementById('accGrossProfit').innerText = `${formatINR(pnl.gross_profit || 0)} (${pnl.net_margin_pct || 0}%)`;
+      if (roleCfg.showFinancialKPIs) {
+        document.getElementById('accRevenue').innerText = formatINR(pnl.total_revenue || 0);
+        document.getElementById('accMarginTag').innerHTML = `Live B2B Gross Margin: <b>${pnl.net_margin_pct || 0}%</b> (Gross Profit: ${formatINR(pnl.gross_profit || 0)})`;
 
-      // Find individual head balances from trial balance
-      const tb = acc.trial_balance || [];
-      const invHead = tb.find(h => h.account_head === 'Inventory Asset');
-      const recHead = tb.find(h => h.account_head === 'Accounts Receivable (Debtors)');
-      const payHead = tb.find(h => h.account_head === 'Accounts Payable (Creditors)');
+        const tb = acc.trial_balance || [];
+        const invHead = tb.find(h => h.account_head === 'Inventory Asset');
+        const recHead = tb.find(h => h.account_head === 'Accounts Receivable (Debtors)');
+        const payHead = tb.find(h => h.account_head === 'Accounts Payable (Creditors)');
 
-      document.getElementById('accInventory').innerText = formatINR(invHead ? invHead.net_balance : 0);
-      document.getElementById('accReceivables').innerText = formatINR(recHead ? recHead.net_balance : 0);
-      document.getElementById('accPayables').innerText = formatINR(payHead ? Math.abs(payHead.net_balance) : 0);
+        document.getElementById('accInventory').innerText = formatINR(invHead ? invHead.net_balance : 0);
+        document.getElementById('accReceivables').innerText = formatINR(recHead ? recHead.net_balance : 0);
+        document.getElementById('accPayables').innerText = formatINR(payHead ? Math.abs(payHead.net_balance) : 0);
+      } else {
+        document.getElementById('accRevenue').innerText = '🔒 Restricted';
+        document.getElementById('accInventory').innerText = '🔒 Restricted';
+        document.getElementById('accReceivables').innerText = '🔒 Restricted';
+        document.getElementById('accPayables').innerText = '🔒 Restricted';
+      }
 
-      // Render Trial Balance Table
+      // Render Trial Balance
       const tbBody = document.getElementById('trialBalanceTableBody');
+      const tb = acc.trial_balance || [];
       tbBody.innerHTML = tb.map(row => `
-        <tr class="hover:bg-slate-800/40 transition">
-          <td class="p-2.5 font-bold text-white font-sans">${row.account_head}</td>
-          <td class="p-2.5 text-slate-400 font-sans text-[11px]">${row.account_type}</td>
-          <td class="p-2.5 text-right font-mono ${row.debit > 0 ? 'text-slate-100 font-bold' : 'text-slate-500'}">${row.debit > 0 ? formatINR(row.debit) : '-'}</td>
-          <td class="p-2.5 text-right font-mono ${row.credit > 0 ? 'text-slate-100 font-bold' : 'text-slate-500'}">${row.credit > 0 ? formatINR(row.credit) : '-'}</td>
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-bold text-slate-900 font-sans">${row.account_head}</td>
+          <td class="p-2.5 text-slate-500 font-sans text-[11px]">${row.account_type}</td>
+          <td class="p-2.5 text-right font-mono ${row.debit > 0 ? 'text-slate-900 font-bold' : 'text-slate-400'}">${row.debit > 0 ? formatINR(row.debit) : '-'}</td>
+          <td class="p-2.5 text-right font-mono ${row.credit > 0 ? 'text-slate-900 font-bold' : 'text-slate-400'}">${row.credit > 0 ? formatINR(row.credit) : '-'}</td>
         </tr>
       `).join('');
 
@@ -1374,65 +1700,67 @@
 
       const tbBadge = document.getElementById('trialBalanceBadge');
       if (acc.is_balanced) {
-        tbBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        tbBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 border border-emerald-300';
         tbBadge.innerText = 'Balanced (Dr == Cr)';
       } else {
-        tbBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        tbBadge.className = 'text-xs font-mono font-bold px-2.5 py-1 rounded bg-rose-100 text-rose-800 border border-rose-300';
         tbBadge.innerText = 'UNBALANCED!';
       }
 
-      // Render General Ledger Stream
+      // Render Ledger Stream
       const glBody = document.getElementById('generalLedgerTableBody');
       const entries = acc.ledger_entries || [];
       glBody.innerHTML = entries.map(e => `
-        <tr class="hover:bg-slate-800/40 transition">
+        <tr class="hover:bg-slate-50 transition">
           <td class="p-2.5">
-            <div class="font-bold text-teal-400">${e.voucher_no}</div>
-            <div class="text-[10px] text-slate-400">${e.entry_date}</div>
+            <div class="font-bold text-teal-700">${e.voucher_no}</div>
+            <div class="text-[10px] text-slate-500">${e.entry_date}</div>
           </td>
           <td class="p-2.5">
-            <div class="font-bold text-white font-sans">${e.account_head}</div>
-            <div class="text-[10px] text-slate-400 font-sans">${e.narration}</div>
+            <div class="font-bold text-slate-900 font-sans">${e.account_head}</div>
+            <div class="text-[10px] text-slate-600 font-sans">${e.narration}</div>
           </td>
-          <td class="p-2.5 text-right font-bold ${e.debit > 0 ? 'text-emerald-400' : 'text-slate-600'}">${e.debit > 0 ? formatINR(e.debit) : '-'}</td>
-          <td class="p-2.5 text-right font-bold ${e.credit > 0 ? 'text-cyan-400' : 'text-slate-600'}">${e.credit > 0 ? formatINR(e.credit) : '-'}</td>
+          <td class="p-2.5 text-right font-bold ${e.debit > 0 ? 'text-emerald-700' : 'text-slate-400'}">${e.debit > 0 ? formatINR(e.debit) : '-'}</td>
+          <td class="p-2.5 text-right font-bold ${e.credit > 0 ? 'text-teal-700' : 'text-slate-400'}">${e.credit > 0 ? formatINR(e.credit) : '-'}</td>
         </tr>
       `).join('');
     }
 
-    // TAB 5: GST COMPLIANCE & E-INVOICING
+    // =========================================================================
+    // TAB 5 LOGIC: GST E-INVOICE & E-WAY BILLS
+    // =========================================================================
     function renderGSTTable() {
       const tbody = document.getElementById('gstInvoicesTableBody');
       const invoices = state.sales_orders.filter(o => o.stage === 'Invoiced');
 
       if (invoices.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">No invoiced sales yet. Convert a Confirmed Order in Tab 1 to generate E-Invoice.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="p-5 text-center text-slate-400 italic">No invoiced sales yet. Convert a Confirmed Order in Tab 1 to generate official E-Invoice.</td></tr>';
         return;
       }
 
       tbody.innerHTML = invoices.map(inv => `
-        <tr class="hover:bg-slate-800/40 transition">
-          <td class="p-2.5 font-mono font-bold text-teal-400">${inv.doc_no}</td>
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="p-2.5 font-mono font-bold text-teal-700">${inv.doc_no}</td>
           <td class="p-2.5">
-            <div class="font-bold text-white">${inv.customer_name}</div>
-            <div class="text-[10px] text-slate-400 font-mono">${inv.customer_gstin}</div>
+            <div class="font-bold text-slate-900">${inv.customer_name}</div>
+            <div class="text-[10px] text-slate-500 font-mono">${inv.customer_gstin}</div>
           </td>
           <td class="p-2.5 font-mono text-[11px]">
             <div>HSN: ${inv.hsn_code} (${inv.tax_type})</div>
-            <div class="text-teal-300 font-bold">${formatINR(inv.total_amount)} <span class="text-slate-400 font-normal">(Base: ${formatINR(inv.base_amount)} + GST: ${formatINR(inv.gst_amount)})</span></div>
+            <div class="text-teal-800 font-bold">${formatINR(inv.total_amount)} <span class="text-slate-500 font-normal">(Base: ${formatINR(inv.base_amount)} + GST: ${formatINR(inv.gst_amount)})</span></div>
           </td>
-          <td class="p-2.5 font-mono text-[10px] text-slate-400 max-w-[140px] truncate" title="${inv.irn_no}">
+          <td class="p-2.5 font-mono text-[10px] text-slate-500 max-w-[130px] truncate" title="${inv.irn_no}">
             ${inv.irn_no ? inv.irn_no.substring(0, 16) + '...' : 'PENDING'}
           </td>
-          <td class="p-2.5 font-mono text-cyan-300 font-semibold">${inv.eway_bill_no || 'PENDING'}</td>
+          <td class="p-2.5 font-mono text-slate-800 font-bold">${inv.eway_bill_no || 'PENDING'}</td>
           <td class="p-2.5 text-right space-x-1.5">
-            <button onclick="openInvoicePrintModal(${inv.id})" class="bg-teal-600 hover:bg-teal-500 text-white px-2.5 py-1 rounded text-xs font-semibold shadow-sm transition">
-              <i class="fa-solid fa-receipt mr-1"></i> Print E-Invoice
+            <button onclick="openInvoicePrintModal(${inv.id})" class="bg-teal-600 hover:bg-teal-700 text-white px-2.5 py-1 rounded text-xs font-semibold shadow-sm transition">
+              <i class="fa-solid fa-receipt mr-1"></i> View/Print E-Invoice
             </button>
-            <button onclick="openEwayPrintModal(${inv.id})" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2.5 py-1 rounded text-xs font-semibold shadow-sm transition">
-              <i class="fa-solid fa-truck-moving mr-1"></i> E-Way Bill
+            <button onclick="openEwayPrintModal(${inv.id})" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2.5 py-1 rounded text-xs font-semibold shadow-sm transition">
+              <i class="fa-solid fa-truck-moving mr-1"></i> Driver E-Way Bill
             </button>
-            <a href="/api/gst/e-invoice-json/${inv.id}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-xs font-semibold border border-slate-700 transition inline-block">
+            <a href="/api/gst/e-invoice-json/${inv.id}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-2 py-1 rounded text-xs font-semibold border border-slate-300 transition inline-block">
               <i class="fa-solid fa-file-code mr-1"></i> Govt JSON
             </a>
           </td>
@@ -1440,7 +1768,6 @@
       `).join('');
     }
 
-    // Modal Populate Functions
     function openInvoicePrintModal(orderId) {
       const order = state.sales_orders.find(o => o.id === orderId);
       if (!order) return;
@@ -1450,7 +1777,7 @@
       document.getElementById('modalBuyerName').innerText = order.customer_name;
       document.getElementById('modalBuyerGSTIN').innerText = order.customer_gstin;
       document.getElementById('modalBuyerTier').innerText = order.price_tier;
-      document.getElementById('modalIRN').innerText = order.irn_no || 'PENDING';
+      document.getElementById('modalIRN').innerText = order.irn_no || 'PENDING-GENERATION';
       document.getElementById('modalEwb').innerText = order.eway_bill_no || 'NOT-GENERATED';
       document.getElementById('modalVehicle').innerText = order.vehicle_no;
 
@@ -1482,7 +1809,7 @@
       openModal('ewayModal');
     }
 
-    // Initialize application on DOM load
+    // DOM Ready initialization
     document.addEventListener('DOMContentLoaded', () => {
       loadBootstrap();
     });
