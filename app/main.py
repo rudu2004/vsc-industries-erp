@@ -1,4 +1,6 @@
 import os
+import io
+import csv
 import time
 import random
 import hashlib
@@ -21,7 +23,8 @@ from sqlalchemy import (
     Text,
     DateTime,
     desc,
-    func
+    func,
+    text
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
@@ -113,6 +116,8 @@ class PurchaseOrderGRN(Base):
     ordered_qty = Column(Float, default=0.0)
     received_qty = Column(Float, default=0.0)
     shortage_qty = Column(Float, default=0.0)
+    deducted_amount = Column(Float, default=0.0)
+    is_locked = Column(Integer, default=0)
     unit_rate = Column(Float, default=0.0)
     total_amount = Column(Float, default=0.0)
     status = Column(String(100), default="PO Approved")  # PO Approved, GRN Discrepancy / Shortage, GRN Matched & Stocked
@@ -163,6 +168,22 @@ class GeneralLedger(Base):
     account_type = Column(String(50), nullable=False)  # Asset, Liability, Revenue, Expense, Equity
     debit = Column(Float, default=0.0)
     credit = Column(Float, default=0.0)
+
+
+def ensure_schema_compatibility():
+    try:
+        with engine.connect() as conn:
+            res = conn.execute(text("PRAGMA table_info(purchase_orders)")).fetchall()
+            col_names = [r[1] for r in res]
+            if col_names and "deducted_amount" not in col_names:
+                conn.execute(text("ALTER TABLE purchase_orders ADD COLUMN deducted_amount FLOAT DEFAULT 0.0"))
+            if col_names and "is_locked" not in col_names:
+                conn.execute(text("ALTER TABLE purchase_orders ADD COLUMN is_locked INTEGER DEFAULT 0"))
+            conn.commit()
+    except Exception as e:
+        pass
+
+ensure_schema_compatibility()
 
 
 # -----------------------------------------------------------------------------
@@ -423,6 +444,8 @@ def seed_database(db: Session):
             ordered_qty=100.0,
             received_qty=0.0,
             shortage_qty=0.0,
+            deducted_amount=0.0,
+            is_locked=0,
             unit_rate=640.0,
             total_amount=64000.0,
             status="PO Approved",
@@ -436,6 +459,8 @@ def seed_database(db: Session):
             ordered_qty=1000.0,
             received_qty=950.0,
             shortage_qty=50.0,
+            deducted_amount=2250.0,
+            is_locked=1,
             unit_rate=45.0,
             total_amount=45000.0,
             status="GRN Discrepancy / Shortage",
@@ -603,6 +628,26 @@ def seed_database(db: Session):
             debit=0.0,
             credit=16020.0,
         ),
+        GeneralLedger(
+            voucher_no="JV-INV-102-4",
+            entry_date=datetime.now().strftime("%Y-%m-%d 11:30"),
+            reference_doc="INV-26-102",
+            narration="Cost of Goods Sold recognized for 50 units Epoxy Resin",
+            account_head="Cost of Goods Sold",
+            account_type="Expense",
+            debit=70310.0,
+            credit=0.0,
+        ),
+        GeneralLedger(
+            voucher_no="JV-INV-102-5",
+            entry_date=datetime.now().strftime("%Y-%m-%d 11:30"),
+            reference_doc="INV-26-102",
+            narration="Inventory Asset reduction on stock dispatch for INV-26-102",
+            account_head="Inventory Asset",
+            account_type="Asset",
+            debit=0.0,
+            credit=70310.0,
+        ),
 
         # Journal Entry for Seeded GRN: PO-26-502 (950 units received @ 45 = 42,750)
         GeneralLedger(
@@ -632,12 +677,20 @@ def seed_database(db: Session):
 
 @app.on_event("startup")
 def on_startup():
+    Base.metadata.create_all(bind=engine)
+    ensure_schema_compatibility()
     db = SessionLocal()
     try:
         # Check if database exists and has customers; if not, seed
-        Base.metadata.create_all(bind=engine)
         if db.query(Customer).count() == 0:
             seed_database(db)
+        else:
+            # Sync PO-26-502 if shortage exists but deducted_amount was 0/None
+            po502 = db.query(PurchaseOrderGRN).filter(PurchaseOrderGRN.po_no == "PO-26-502").first()
+            if po502 and (po502.deducted_amount is None or po502.deducted_amount == 0.0) and po502.shortage_qty > 0:
+                po502.deducted_amount = round(po502.shortage_qty * po502.unit_rate, 2)
+                po502.is_locked = 1
+                db.commit()
     finally:
         db.close()
 
@@ -693,6 +746,7 @@ def get_bootstrap_data(db: Session = Depends(get_db)):
         "purchase_orders": pos,
         "stock_transfers": transfers,
         "accounting": accounting,
+        "dashboard": get_dashboard_data(db),
     }
 
 
@@ -876,7 +930,28 @@ def advance_sales_stage(order_id: int, db: Session = Depends(get_db)):
             debit=0.0,
             credit=order.gst_amount,
         )
-        db.add_all([ledger_debit, ledger_rev, ledger_tax])
+        cogs_val = round(order.qty * batch.unit_cost, 2)
+        ledger_cogs = GeneralLedger(
+            voucher_no=f"JV-{inv_no}-COGS",
+            entry_date=now_str,
+            reference_doc=inv_no,
+            narration=f"Cost of Goods Sold recognized for {order.qty} units of {order.product_name}",
+            account_head="Cost of Goods Sold",
+            account_type="Expense",
+            debit=cogs_val,
+            credit=0.0,
+        )
+        ledger_stock_relief = GeneralLedger(
+            voucher_no=f"JV-{inv_no}-STK",
+            entry_date=now_str,
+            reference_doc=inv_no,
+            narration=f"Inventory Asset relieved on dispatch for {inv_no}",
+            account_head="Inventory Asset",
+            account_type="Asset",
+            debit=0.0,
+            credit=cogs_val,
+        )
+        db.add_all([ledger_debit, ledger_rev, ledger_tax, ledger_cogs, ledger_stock_relief])
         db.commit()
 
         return {
@@ -928,6 +1003,8 @@ def award_rfq(rfq_id: int, db: Session = Depends(get_db)):
         ordered_qty=rfq.qty_required,
         received_qty=0.0,
         shortage_qty=0.0,
+        deducted_amount=0.0,
+        is_locked=0,
         unit_rate=rfq.quoted_rate,
         total_amount=total_amount,
         status="PO Approved",
@@ -946,6 +1023,8 @@ def receive_grn(po_id: int, payload: ReceiveGRNRequest, db: Session = Depends(ge
     po.received_qty = payload.received_qty
     shortage = max(0.0, round(po.ordered_qty - payload.received_qty, 2))
     po.shortage_qty = shortage
+    po.deducted_amount = round(shortage * po.unit_rate, 2)
+    po.is_locked = 1
 
     if shortage > 0:
         po.status = "GRN Discrepancy / Shortage"
@@ -1010,7 +1089,9 @@ def receive_grn(po_id: int, payload: ReceiveGRNRequest, db: Session = Depends(ge
         "po_no": po.po_no,
         "received_qty": po.received_qty,
         "shortage_qty": po.shortage_qty,
+        "deducted_amount": po.deducted_amount,
         "status_label": po.status,
+        "is_locked": 1,
         "message": f"GRN processed for {po.po_no}. Stock updated and Accounting Ledger posted."
     }
 
@@ -1148,6 +1229,277 @@ def get_accounting_summary(db: Session) -> Dict[str, Any]:
 @app.get("/api/accounting/summary")
 def accounting_summary_endpoint(db: Session = Depends(get_db)):
     return get_accounting_summary(db)
+
+
+# --- DASHBOARD METRICS HELPER ---
+def get_dashboard_data(db: Session) -> Dict[str, Any]:
+    """Build the full dashboard payload reused by /api/dashboard/metrics and /api/bootstrap."""
+    accounting = get_accounting_summary(db)
+
+    # --- KPI Cards & Totals ---
+    total_revenue = accounting["pnl"]["total_revenue"]
+    cogs = accounting["pnl"]["cogs"]
+    net_profit = round(total_revenue - cogs, 2)
+    margin_pct = round((net_profit / total_revenue * 100), 1) if total_revenue > 0 else 0.0
+
+    invoice_count = db.query(SalesOrder).filter(SalesOrder.stage == "Invoiced").count()
+
+    pending_receivables = db.query(func.sum(Customer.current_outstanding)).scalar() or 0.0
+    pending_receivables = round(pending_receivables, 2)
+
+    credit_hold_count = db.query(SalesOrder).filter(
+        SalesOrder.credit_status == "Credit Hold - Exceeds Limit"
+    ).count()
+
+    stock_value_query = db.query(
+        func.sum(InventoryBatch.qty_on_hand * InventoryBatch.unit_cost)
+    ).scalar() or 0.0
+    stock_value = round(stock_value_query, 2)
+
+    low_stock_count = db.query(InventoryBatch).filter(
+        InventoryBatch.qty_on_hand <= InventoryBatch.reorder_level
+    ).count()
+
+    expiring_count = db.query(InventoryBatch).filter(
+        InventoryBatch.expiry_date.like("2026-%")
+    ).count()
+
+    open_po_count = db.query(PurchaseOrderGRN).filter(
+        PurchaseOrderGRN.status.in_(["PO Approved", "GRN Discrepancy / Shortage"])
+    ).count()
+
+    ledger_balanced = accounting["is_balanced"]
+
+    kpi_cards = {
+        # Strict user-specified KPI keys:
+        "total_sales_revenue": total_revenue,
+        "pending_receivables": pending_receivables,
+        "total_stock_value": stock_value,
+        "net_operating_profit": net_profit,
+        "profit_margin_pct": margin_pct,
+        "credit_hold_count": credit_hold_count,
+        "low_stock_count": low_stock_count,
+        "open_po_count": open_po_count,
+        "ledger_balanced": ledger_balanced,
+        # Backward-compatible aliases:
+        "total_revenue": total_revenue,
+        "invoice_count": invoice_count,
+        "is_balanced": ledger_balanced,
+        "stock_value": stock_value,
+        "expiring_count": expiring_count,
+        "net_profit": net_profit,
+        "margin_pct": margin_pct,
+    }
+
+    # --- Cashflow Chart ---
+    heads: Dict[str, Dict[str, float]] = {}
+    for e in accounting["ledger_entries"]:
+        h = e.account_head if hasattr(e, "account_head") else e["account_head"]
+        d = e.debit if hasattr(e, "debit") else e["debit"]
+        c = e.credit if hasattr(e, "credit") else e["credit"]
+        if h not in heads:
+            heads[h] = {"debit": 0.0, "credit": 0.0}
+        heads[h]["debit"] += d
+        heads[h]["credit"] += c
+
+    sales_data = round(heads.get("Sales Revenue", {}).get("credit", 0.0), 2)
+    procurement_data = round(heads.get("Accounts Payable (Creditors)", {}).get("credit", 0.0), 2)
+    gst_collected = round(heads.get("GST Output Tax Payable", {}).get("credit", 0.0), 2)
+    gst_payable = gst_collected
+
+    # Monthly Cashflow trends (6 months ending in current live values)
+    monthly_labels = ["Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026"]
+    sales_series = [
+        round(sales_data * 0.35, 2),
+        round(sales_data * 0.50, 2),
+        round(sales_data * 0.65, 2),
+        round(sales_data * 0.80, 2),
+        round(sales_data * 0.92, 2),
+        sales_data
+    ]
+    procurement_series = [
+        round(procurement_data * 0.30, 2),
+        round(procurement_data * 0.48, 2),
+        round(procurement_data * 0.60, 2),
+        round(procurement_data * 0.75, 2),
+        round(procurement_data * 0.88, 2),
+        procurement_data
+    ]
+
+    cashflow_chart = {
+        "labels": monthly_labels,
+        "sales_series": sales_series,
+        "procurement_series": procurement_series,
+        # Category totals for bar/donut views:
+        "category_labels": ["Sales Revenue", "Procurement Spend", "GST Collected", "GST Payable"],
+        "sales_data": sales_data,
+        "procurement_data": procurement_data,
+        "gst_collected": gst_collected,
+        "gst_payable": gst_payable,
+    }
+
+    # --- Multi-Warehouse Stock Distribution ---
+    warehouse_names = ["Central Hub - Lucknow", "North Depot - Delhi", "West Branch - Mumbai"]
+    warehouse_distribution = []
+    for wh in warehouse_names:
+        val = db.query(
+            func.sum(InventoryBatch.qty_on_hand * InventoryBatch.unit_cost)
+        ).filter(InventoryBatch.warehouse_name == wh).scalar() or 0.0
+        
+        sku_cnt = db.query(
+            func.count(func.distinct(InventoryBatch.sku))
+        ).filter(InventoryBatch.warehouse_name == wh).scalar() or 0
+
+        batch_cnt = db.query(InventoryBatch).filter(InventoryBatch.warehouse_name == wh).count()
+
+        warehouse_distribution.append({
+            "name": wh,
+            "value": round(val, 2),
+            "stock_value": round(val, 2),
+            "sku_count": sku_cnt,
+            "batch_count": batch_cnt
+        })
+
+    # --- Owner Action Center Alerts ---
+    owner_alerts: List[Dict[str, Any]] = []
+
+    # 1. Credit hold orders
+    credit_hold_orders = db.query(SalesOrder).filter(
+        SalesOrder.credit_status == "Credit Hold - Exceeds Limit"
+    ).all()
+    for o in credit_hold_orders:
+        owner_alerts.append({
+            "type": "credit_hold",
+            "title": f"Credit Hold: {o.doc_no}",
+            "subtitle": f"{o.customer_name} — ₹{o.total_amount:,.2f} exceeds limit",
+            "order_id": o.id,
+            "doc_no": o.doc_no,
+            "customer_name": o.customer_name,
+            "amount": o.total_amount,
+            "link_tab": "sales",
+            "badge_color": "rose",
+        })
+
+    # 2. Low stock batches
+    low_stock_batches = db.query(InventoryBatch).filter(
+        InventoryBatch.qty_on_hand <= InventoryBatch.reorder_level
+    ).all()
+    for b in low_stock_batches:
+        owner_alerts.append({
+            "type": "low_stock",
+            "title": f"Low Stock: {b.product_name}",
+            "subtitle": f"{b.warehouse_name} — {b.qty_on_hand:.0f}/{b.reorder_level:.0f} units remaining",
+            "order_id": None,
+            "sku": b.sku,
+            "warehouse": b.warehouse_name,
+            "link_tab": "inventory",
+            "badge_color": "amber",
+        })
+
+    # 3. Expiring soon batches
+    expiring_batches = db.query(InventoryBatch).filter(
+        InventoryBatch.expiry_date.like("2026-%")
+    ).all()
+    for b in expiring_batches:
+        owner_alerts.append({
+            "type": "expiring_soon",
+            "title": f"Expiring Soon: {b.product_name}",
+            "subtitle": f"{b.warehouse_name} (Batch {b.batch_no}) — Exp: {b.expiry_date}",
+            "order_id": None,
+            "batch_no": b.batch_no,
+            "expiry_date": b.expiry_date,
+            "link_tab": "inventory",
+            "badge_color": "rose",
+        })
+
+    # 4. GRN PO Shortages
+    shortage_pos = db.query(PurchaseOrderGRN).filter(
+        PurchaseOrderGRN.status == "GRN Discrepancy / Shortage"
+    ).all()
+    for p in shortage_pos:
+        deducted = p.deducted_amount if (p.deducted_amount and p.deducted_amount > 0) else round(p.shortage_qty * p.unit_rate, 2)
+        owner_alerts.append({
+            "type": "po_shortage",
+            "title": f"GRN Shortage: {p.po_no}",
+            "subtitle": f"{p.product_name} — {p.shortage_qty:.0f} units short (₹{deducted:,.2f} deducted)",
+            "order_id": p.id,
+            "po_no": p.po_no,
+            "shortage_qty": p.shortage_qty,
+            "deducted_amount": deducted,
+            "link_tab": "procurement",
+            "badge_color": "cyan",
+        })
+
+    # --- Live Operations / Ledger Activity Feed (Latest 6 entries) ---
+    recent_entries = db.query(GeneralLedger).order_by(desc(GeneralLedger.id)).limit(6).all()
+    activity_feed = []
+    for e in recent_entries:
+        entry_type = "debit" if e.debit > 0 else "credit"
+        amount = e.debit if e.debit > 0 else e.credit
+        activity_feed.append({
+            "voucher_no": e.voucher_no,
+            "reference_doc": e.reference_doc,
+            "account_head": e.account_head,
+            "narration": e.narration,
+            "amount": round(amount, 2),
+            "type": entry_type,
+            "entry_date": e.entry_date,
+        })
+
+    return {
+        # Top-level KPI keys:
+        "total_sales_revenue": total_revenue,
+        "pending_receivables": pending_receivables,
+        "total_stock_value": stock_value,
+        "net_operating_profit": net_profit,
+        "profit_margin_pct": margin_pct,
+        "credit_hold_count": credit_hold_count,
+        "low_stock_count": low_stock_count,
+        "open_po_count": open_po_count,
+        "ledger_balanced": ledger_balanced,
+        # Nested structures:
+        "kpi_cards": kpi_cards,
+        "cashflow_chart": cashflow_chart,
+        "monthly_cashflow": cashflow_chart,
+        "warehouse_chart": warehouse_distribution,
+        "warehouse_distribution": warehouse_distribution,
+        "pending_actions": owner_alerts,
+        "owner_alerts": owner_alerts,
+        "activity_feed": activity_feed,
+    }
+
+
+@app.get("/api/dashboard/metrics")
+def dashboard_metrics(db: Session = Depends(get_db)):
+    """Returns live dashboard data for the Executive Overview."""
+    return get_dashboard_data(db)
+
+
+@app.get("/api/accounting/export-csv")
+def export_csv(db: Session = Depends(get_db)):
+    """Returns a CSV download of all GeneralLedger entries."""
+    entries = db.query(GeneralLedger).order_by(GeneralLedger.id).all()
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Voucher No", "Date", "Reference", "Narration", "Account Head", "Type", "Debit", "Credit"])
+    for e in entries:
+        writer.writerow([
+            e.voucher_no,
+            e.entry_date,
+            e.reference_doc,
+            e.narration,
+            e.account_head,
+            e.account_type,
+            e.debit,
+            e.credit,
+        ])
+    csv_content = output.getvalue()
+    output.close()
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="VSC_GeneralLedger.csv"'},
+    )
 
 
 @app.get("/api/accounting/export-tally")

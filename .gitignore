@@ -1,0 +1,33 @@
+# Environments & Virtual Envs
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Local Databases (Render uses auto-seeded ephemeral disk)
+vsc_erp.db
+*.db
+*.sqlite3
+
+# Agent & IDE Configurations
+.agents/
+.vscode/
+.idea/
+.gemini/
+
+# Temporary & Log Files
+_temp*
+*.log
+.coverage
+htmlcov/
+.pytest_cache/
+
+# OS Specific
+.DS_Store
+Thumbs.db
